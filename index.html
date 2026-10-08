@@ -1,468 +1,1468 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0E1014">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>House Expenses</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0E1014;--surface:#171A21;--surface2:#1F232C;--sheet:#14171D;--line:#2A2F3A;--line2:#232833;--track:#262B35;
-  --text:#F3F1EC;--soft:#C8CCD4;--muted:#A3A9B6;--faint:#8A909C;
-  --accent:#E7B85A;--accentText:#E7B85A;--onAccent:#1A1406;--accentSoft:#2A2414;
-  --over:#F08A4B;--overText:#F6A472;--overBg:#3A2318;--overLine:#5A3420;
-  --good:#A3E4C9;--blue:#7FB2F5;--nav:#12151B;--dash:#3A404C;--scrim:rgba(4,5,7,.62);
-  color-scheme:dark;
-}
-:root[data-theme="light"]{
-  --bg:#F6F4EF;--surface:#FFFFFF;--surface2:#F3F0EA;--sheet:#FFFFFF;--line:#E3DED3;--line2:#ECE8E0;--track:#E8E4DB;
-  --text:#17181C;--soft:#3F444D;--muted:#5E6470;--faint:#6B717C;
-  --accent:#E7B85A;--accentText:#8A6418;--onAccent:#1A1406;--accentSoft:#FBF1DC;
-  --over:#E0712F;--overText:#B5531C;--overBg:#FBE6D8;--overLine:#F0B48F;
-  --good:#1E7A55;--blue:#2F6FC4;--nav:#FFFFFF;--dash:#CFC9BC;--scrim:rgba(20,18,12,.38);
-  color-scheme:light;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--text);font-family:Manrope,"Segoe UI",system-ui,-apple-system,sans-serif;font-variant-numeric:tabular-nums;-webkit-tap-highlight-color:transparent}
-button,input,select{font-family:inherit;color:inherit}
-button{cursor:pointer}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.app{max-width:480px;margin:0 auto;min-height:100%;padding:calc(env(safe-area-inset-top,0px) + 16px) 18px calc(env(safe-area-inset-bottom,0px) + 110px)}
-.col{display:flex;flex-direction:column}
-.row{display:flex;align-items:center}
-.between{justify-content:space-between}
-.gap4{gap:4px}.gap6{gap:6px}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}.gap16{gap:16px}.gap18{gap:18px}
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:18px}
-.pad{padding:14px}
-.k{font-size:12px;color:var(--muted);font-weight:600}
-.h1{font-size:20px;font-weight:800}
-.h2{font-size:16px;font-weight:800;margin:0}
-.big{font-size:34px;font-weight:800;letter-spacing:-.02em}
-.iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text);flex-shrink:0}
-.chip{padding:5px 10px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
-.chip.over{background:var(--overBg);color:var(--overText)}
-.chip.ok{background:var(--surface2);color:var(--muted)}
-.bar{height:10px;border-radius:999px;background:var(--track);overflow:hidden;display:flex}
-.mini{background:var(--surface2);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:2px;min-width:0}
-.mini b{font-size:15px}
-.badge{padding:12px 14px;display:flex;flex-direction:column;gap:6px;border-radius:16px}
-.badge.stale{opacity:.6}
-.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px;text-align:left;width:100%}
-.tile.over{border-color:var(--overLine)}
-.tile.add{border:1px dashed var(--dash);background:transparent;align-items:center;justify-content:center;color:var(--muted);font-weight:700;font-size:13px;min-height:150px}
-.list{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
-.item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:none;border-bottom:1px solid var(--line2);background:transparent;width:100%;text-align:left}
-.item:last-child{border-bottom:none}
-.av{width:40px;height:40px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
-.ellip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.seg{display:grid;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px}
-.seg button{height:40px;border-radius:10px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:700}
-.seg button.on{background:var(--text);color:var(--bg);font-weight:800}
-.pill{height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--soft);font-size:13px;font-weight:700}
-.pill.on{border-color:var(--accent);background:var(--accentSoft);color:var(--text)}
-.pill.dash{border-style:dashed;border-color:var(--dash);background:transparent;color:var(--muted)}
-.field{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:0 12px;font-size:15px;outline:none;width:100%;min-width:0}
-.field::placeholder{color:var(--faint)}
-.primary{height:54px;border-radius:16px;border:none;background:var(--accent);color:var(--onAccent);font-size:16px;font-weight:800;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
-.primary:disabled{opacity:.45}
-.ghost{height:46px;border-radius:14px;border:1px solid var(--line);background:transparent;font-size:14px;font-weight:700;color:var(--soft);padding:0 14px}
-.danger{color:var(--overText);border-color:var(--overLine)}
-.nav{position:fixed;left:0;right:0;bottom:0;background:var(--nav);border-top:1px solid var(--line2);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
-.nav .in{max-width:480px;margin:0 auto;height:72px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center}
-.nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--muted);padding:6px 0}
-.nav button.on{color:var(--accentText)}
-.nav .fab{justify-self:center;width:58px;height:58px;border-radius:20px;background:var(--accent);color:var(--onAccent);margin-top:-26px;padding:0;justify-content:center}
-.scrim{position:fixed;inset:0;background:var(--scrim);z-index:40;display:flex;align-items:flex-end;justify-content:center}
-.sheet{width:100%;max-width:480px;max-height:92vh;overflow:auto;background:var(--sheet);border-top:1px solid var(--line);border-radius:28px 28px 0 0;padding:10px 18px calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;flex-direction:column;gap:14px;animation:up .22s ease-out}
-@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
-@media (prefers-reduced-motion:reduce){.sheet{animation:none}}
-.grab{align-self:center;width:40px;height:5px;border-radius:999px;background:var(--dash)}
-.steps{display:flex;gap:4px}.steps span{width:22px;height:4px;border-radius:999px;background:var(--line)}.steps span.on{background:var(--accent)}
-.ctile{min-height:76px;border-radius:16px;border:1px solid var(--line);background:var(--surface);color:var(--soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:6px 4px;font-size:11px;font-weight:700;text-align:center;line-height:1.15}
-.ctile.on{border-color:var(--accent);background:var(--accentSoft);color:var(--text)}
-.ctile.dash{border-style:dashed;border-color:var(--dash);background:transparent;color:var(--muted)}
-.keys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.keys button{height:46px;border-radius:12px;border:none;background:var(--surface2);font-size:20px;font-weight:700}
-.opt{min-height:60px;border-radius:16px;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;gap:12px;padding:8px 14px;text-align:left;width:100%}
-.opt.on{border:2px solid var(--accent);background:var(--accentSoft)}
-.swatch{width:40px;height:28px;border-radius:6px;flex-shrink:0}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 92px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;z-index:60;max-width:90vw}
-.empty{padding:28px 16px;text-align:center;color:var(--muted);font-size:14px}
-.over-t{color:var(--overText)}
-.label{font-size:13px;font-weight:800}
-.hint{font-size:11px;color:var(--faint)}
-.amt{display:flex;align-items:baseline;justify-content:center;gap:4px;padding:2px 0}
-.amt .r{font-size:26px;font-weight:800;color:var(--faint)}
-.amt .v{font-size:46px;font-weight:800;letter-spacing:-.02em}
-.caret{width:2px;height:38px;background:var(--accent);align-self:center;margin-left:2px;animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.caret{animation:none}}
-.sync{color:var(--good)}
-.sync.pending{color:var(--accentText)}
-.sync.off{color:var(--faint)}
-</style>
-</head>
-<body>
-<div class="app" id="app"></div>
-<nav class="nav" id="nav"></nav>
-<div id="modal"></div>
-<div id="toast"></div>
-<script>
-'use strict';
-/* ---------------- constants ---------------- */
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const I={
-  home:'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
-  charts:'M21 12A9 9 0 1 1 12 3v9zM15 3.5A9 9 0 0 1 20.5 9H15z',
-  plus:'M12 5v14M5 12h14',
-  bike:'M5.5 20.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM18.5 20.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5.5 17l4-8h5l4 8M9.5 9L8 6H6',
-  settings:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1',
-  left:'M15 18l-6-6 6-6',right:'M9 18l6-6-6-6',close:'M6 6l12 12M18 6L6 18',check:'M20 6L9 17l-5-5',
-  cloud:'M17.5 19H8a5 5 0 1 1 1-9.9A6 6 0 0 1 20.5 11 4 4 0 0 1 17.5 19z',
-  sun:'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
-  moon:'M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z',
-  search:'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5',
-  cal:'M3 5h18v16H3zM3 10h18M8 3v4M16 3v4',
-  rent:'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
-  grocery:'M3 4h2l2.5 11h11L21 7H6.2M9 20h.01M18 20h.01',
-  misc:'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',
-  bills:'M13 2L4 14h7l-1 8 9-12h-7z',
-  food:'M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 2-3 5-3 8h3v10',
-  petrol:'M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M3 21h12M4 10h10M14 8l3 3v6a1.5 1.5 0 0 0 3 0V8l-3-3',
-  parents:'M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z',
-  tag:'M3 12V4h8l10 10-8 8zM7.5 7.5h.01',
-  wifi:'M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01',
-  phone:'M7 2h10v20H7zM11 18h2',
-  car:'M3 13l2-6h14l2 6v5H3zM7 18v2M17 18v2M3 13h18',
-  bus:'M5 3h14v14H5zM5 11h14M8 20v-3M16 20v-3',
-  repeat:'M17 2l3 3-3 3M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3M20 13v2a4 4 0 0 1-4 4H4',
-  med:'M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z',
-  shirt:'M8 3l4 2 4-2 5 4-3 3-2-1v12H8V9L6 10 3 7z',
-  broom:'M14 3l7 7M12 5l7 7-6 6H7l-2-2v-6z',
-  gift:'M3 9h18v4H3zM5 13h14v8H5zM12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1c2-4 6-4 6-1s-6 1-6 1',
-  box:'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10',
-  star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z',
-  wrench:'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z',
-  drop:'M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z',
-  gear:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12l2-1-1-3-2 .3-1.4-1.4.3-2-3-1-1 2h-2l-1-2-3 1 .3 2L5.8 7.3 4 7 3 10l2 1v2l-2 1 1 3 2-.3 1.4 1.4-.3 2 3 1 1-2h2l1 2 3-1-.3-2 1.4-1.4 2 .3 1-3-2-1z',
-  upi:'M7 4l6 8-6 8M13 4l6 8-6 8',credit:'M2 6h20v12H2zM2 10h20M6 15h4',debit:'M2 6h20v12H2zM2 10h20M15 15h3',
-  cash:'M2 7h20v10H2zM12 12h.01M6 12h.01M18 12h.01',transfer:'M4 8h14l-3-3M20 16H6l3 3',
-  trash:'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',edit:'M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z',
-  download:'M12 3v12M7 10l5 5 5-5M4 21h16'
-};
-const CATS=[
-  {key:'rent',name:'Rent',long:'Rent',icon:'rent',color:'#4F8FE6',subs:['Rent','House repairs / work']},
-  {key:'grocery',name:'Grocery',long:'Grocery',icon:'grocery',color:'#9B7CF2',subs:['Grocery']},
-  {key:'misc',name:'Misc',long:'Misc',icon:'misc',color:'#F08A4B',subs:['Medical','Clothes & personal','Domestic help','Festivals & gifts','Household items','Lifestyle fund']},
-  {key:'bills',name:'Bills & Travel',long:'Electricity / Transport / Broadband',icon:'bills',color:'#8E97A8',subs:['Electricity','Broadband','Mobile recharge','Cab / Auto','Metro / Bus','Subscriptions']},
-  {key:'food',name:'Food',long:'Food / Snacks',icon:'food',color:'#E7B85A',subs:['Food delivery','Eating out','Snacks']},
-  {key:'petrol',name:'Petrol & Bike',long:'Petrol & Bike',icon:'petrol',color:'#3FB58F',subs:['Petrol','Service','Bike care','Spare parts']},
-  {key:'parents',name:'Parents',long:'Parents',icon:'parents',color:'#E9779F',subs:['Parents']}
-];
-const SUB_ICON={'Rent':'rent','House repairs / work':'wrench','Grocery':'grocery','Medical':'med','Clothes & personal':'shirt','Domestic help':'broom','Festivals & gifts':'gift','Household items':'box','Lifestyle fund':'star','Electricity':'bills','Broadband':'wifi','Mobile recharge':'phone','Cab / Auto':'car','Metro / Bus':'bus','Subscriptions':'repeat','Food delivery':'food','Eating out':'food','Snacks':'food','Petrol':'petrol','Service':'wrench','Bike care':'drop','Spare parts':'gear','Parents':'parents'};
-const DEFAULT_BUDGET={rent:20000,grocery:3000,misc:2000,bills:1000,food:5000,petrol:4000,parents:5000};
-const METHODS=[{key:'upi',name:'UPI'},{key:'credit',name:'Credit'},{key:'debit',name:'Debit'},{key:'cash',name:'Cash'},{key:'transfer',name:'Transfer'}];
-const SOURCES={
-  tataneu:{name:'Tata Neu Infinity',hint:'RuPay credit · counts to card bill',color:'#4B3A7A'},
-  millennia:{name:'HDFC Millennia',hint:'Credit card',color:'#1F4E8C'},
-  amazon:{name:'Amazon Pay ICICI',hint:'Credit card',color:'#2B2B2B'},
-  hdfcjoint:{name:'HDFC Joint',hint:'Bank account',color:'#1F3A5C'}
-};
-const METHOD_SOURCES={upi:['tataneu','hdfcjoint'],credit:['tataneu','millennia','amazon'],debit:['hdfcjoint'],transfer:['hdfcjoint'],cash:[]};
-const CARE=['Chain clean & lube','Bike wash','Both'];
-const WHO_COLOR={A:'var(--accentText)',M:'var(--blue)'};
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0E1014" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <title>House Expenses</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon-192.png" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0e1014;
+        --surface: #171a21;
+        --surface2: #1f232c;
+        --sheet: #14171d;
+        --line: #2a2f3a;
+        --line2: #232833;
+        --track: #262b35;
+        --text: #f3f1ec;
+        --soft: #c8ccd4;
+        --muted: #a3a9b6;
+        --faint: #8a909c;
+        --accent: #e7b85a;
+        --accentText: #e7b85a;
+        --onAccent: #1a1406;
+        --accentSoft: #2a2414;
+        --over: #f08a4b;
+        --overText: #f6a472;
+        --overBg: #3a2318;
+        --overLine: #5a3420;
+        --good: #a3e4c9;
+        --blue: #7fb2f5;
+        --nav: #12151b;
+        --dash: #3a404c;
+        --scrim: rgba(4, 5, 7, 0.62);
+        color-scheme: dark;
+      }
+      :root[data-theme="light"] {
+        --bg: #f6f4ef;
+        --surface: #ffffff;
+        --surface2: #f3f0ea;
+        --sheet: #ffffff;
+        --line: #e3ded3;
+        --line2: #ece8e0;
+        --track: #e8e4db;
+        --text: #17181c;
+        --soft: #3f444d;
+        --muted: #5e6470;
+        --faint: #6b717c;
+        --accent: #e7b85a;
+        --accentText: #8a6418;
+        --onAccent: #1a1406;
+        --accentSoft: #fbf1dc;
+        --over: #e0712f;
+        --overText: #b5531c;
+        --overBg: #fbe6d8;
+        --overLine: #f0b48f;
+        --good: #1e7a55;
+        --blue: #2f6fc4;
+        --nav: #ffffff;
+        --dash: #cfc9bc;
+        --scrim: rgba(20, 18, 12, 0.38);
+        color-scheme: light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Manrope,
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        font-variant-numeric: tabular-nums;
+        -webkit-tap-highlight-color: transparent;
+      }
+      button,
+      input,
+      select {
+        font-family: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .app {
+        max-width: 480px;
+        margin: 0 auto;
+        min-height: 100%;
+        padding: calc(env(safe-area-inset-top, 0px) + 16px) 18px
+          calc(env(safe-area-inset-bottom, 0px) + 110px);
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+      }
+      .between {
+        justify-content: space-between;
+      }
+      .gap4 {
+        gap: 4px;
+      }
+      .gap6 {
+        gap: 6px;
+      }
+      .gap8 {
+        gap: 8px;
+      }
+      .gap10 {
+        gap: 10px;
+      }
+      .gap12 {
+        gap: 12px;
+      }
+      .gap16 {
+        gap: 16px;
+      }
+      .gap18 {
+        gap: 18px;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+      }
+      .pad {
+        padding: 14px;
+      }
+      .k {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .h1 {
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .h2 {
+        font-size: 16px;
+        font-weight: 800;
+        margin: 0;
+      }
+      .big {
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .iconbtn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        flex-shrink: 0;
+      }
+      .chip {
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .chip.over {
+        background: var(--overBg);
+        color: var(--overText);
+      }
+      .chip.ok {
+        background: var(--surface2);
+        color: var(--muted);
+      }
+      .bar {
+        height: 10px;
+        border-radius: 999px;
+        background: var(--track);
+        overflow: hidden;
+        display: flex;
+      }
+      .mini {
+        background: var(--surface2);
+        border-radius: 12px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+      .mini b {
+        font-size: 15px;
+      }
+      .badge {
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        border-radius: 16px;
+      }
+      .badge.stale {
+        opacity: 0.6;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .tile {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        text-align: left;
+        width: 100%;
+      }
+      .tile.over {
+        border-color: var(--overLine);
+      }
+      .tile.add {
+        border: 1px dashed var(--dash);
+        background: transparent;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 13px;
+        min-height: 150px;
+      }
+      .list {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+      }
+      .item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border: none;
+        border-bottom: 1px solid var(--line2);
+        background: transparent;
+        width: 100%;
+        text-align: left;
+      }
+      .item:last-child {
+        border-bottom: none;
+      }
+      .av {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--surface2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+      .ellip {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .seg {
+        display: grid;
+        gap: 4px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 4px;
+      }
+      .seg button {
+        height: 40px;
+        border-radius: 10px;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .seg button.on {
+        background: var(--text);
+        color: var(--bg);
+        font-weight: 800;
+      }
+      .pill {
+        height: 38px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--soft);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .pill.on {
+        border-color: var(--accent);
+        background: var(--accentSoft);
+        color: var(--text);
+      }
+      .pill.dash {
+        border-style: dashed;
+        border-color: var(--dash);
+        background: transparent;
+        color: var(--muted);
+      }
+      .field {
+        height: 46px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        padding: 0 12px;
+        font-size: 15px;
+        outline: none;
+        width: 100%;
+        min-width: 0;
+      }
+      .field::placeholder {
+        color: var(--faint);
+      }
+      .primary {
+        height: 54px;
+        border-radius: 16px;
+        border: none;
+        background: var(--accent);
+        color: var(--onAccent);
+        font-size: 16px;
+        font-weight: 800;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .primary:disabled {
+        opacity: 0.45;
+      }
+      .ghost {
+        height: 46px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: transparent;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--soft);
+        padding: 0 14px;
+      }
+      .danger {
+        color: var(--overText);
+        border-color: var(--overLine);
+      }
+      .nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--nav);
+        border-top: 1px solid var(--line2);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        z-index: 20;
+      }
+      .nav .in {
+        max-width: 480px;
+        margin: 0 auto;
+        height: 72px;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        align-items: center;
+      }
+      .nav button {
+        background: none;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--muted);
+        padding: 6px 0;
+      }
+      .nav button.on {
+        color: var(--accentText);
+      }
+      .nav .fab {
+        justify-self: center;
+        width: 58px;
+        height: 58px;
+        border-radius: 20px;
+        background: var(--accent);
+        color: var(--onAccent);
+        margin-top: -26px;
+        padding: 0;
+        justify-content: center;
+      }
+      .scrim {
+        position: fixed;
+        inset: 0;
+        background: var(--scrim);
+        z-index: 40;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .sheet {
+        width: 100%;
+        max-width: 480px;
+        max-height: 92vh;
+        overflow: auto;
+        background: var(--sheet);
+        border-top: 1px solid var(--line);
+        border-radius: 28px 28px 0 0;
+        padding: 10px 18px calc(env(safe-area-inset-bottom, 0px) + 18px);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .sheet.anim {
+        animation: up 0.22s ease-out;
+      }
+      @keyframes up {
+        from {
+          transform: translateY(40px);
+          opacity: 0.4;
+        }
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sheet.anim {
+          animation: none;
+        }
+      }
+      .grab {
+        align-self: center;
+        width: 40px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--dash);
+      }
+      .steps {
+        display: flex;
+        gap: 4px;
+      }
+      .steps span {
+        width: 22px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--line);
+      }
+      .steps span.on {
+        background: var(--accent);
+      }
+      .ctile {
+        min-height: 76px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--soft);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 4px;
+        font-size: 11px;
+        font-weight: 700;
+        text-align: center;
+        line-height: 1.15;
+      }
+      .ctile.on {
+        border-color: var(--accent);
+        background: var(--accentSoft);
+        color: var(--text);
+      }
+      .ctile.dash {
+        border-style: dashed;
+        border-color: var(--dash);
+        background: transparent;
+        color: var(--muted);
+      }
+      .keys {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .keys button {
+        height: 46px;
+        border-radius: 12px;
+        border: none;
+        background: var(--surface2);
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .opt {
+        min-height: 60px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 14px;
+        text-align: left;
+        width: 100%;
+      }
+      .opt.on {
+        border: 2px solid var(--accent);
+        background: var(--accentSoft);
+      }
+      .swatch {
+        width: 40px;
+        height: 28px;
+        border-radius: 6px;
+        flex-shrink: 0;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
+        background: var(--text);
+        color: var(--bg);
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        z-index: 60;
+        max-width: 90vw;
+      }
+      .empty {
+        padding: 28px 16px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .over-t {
+        color: var(--overText);
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .hint {
+        font-size: 11px;
+        color: var(--faint);
+      }
+      .amt {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 4px;
+        padding: 2px 0;
+      }
+      .amt .r {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--faint);
+      }
+      .amt .v {
+        font-size: 46px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .caret {
+        width: 2px;
+        height: 38px;
+        background: var(--accent);
+        align-self: center;
+        margin-left: 2px;
+        animation: blink 1s steps(1) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .caret {
+          animation: none;
+        }
+      }
+      .sync {
+        color: var(--good);
+      }
+      .sync.pending {
+        color: var(--accentText);
+      }
+      .sync.off {
+        color: var(--faint);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app"></div>
+    <nav class="nav" id="nav"></nav>
+    <div id="modal"></div>
+    <div id="toast"></div>
+    <script>
+      "use strict";
+      /* ---------------- constants ---------------- */
+      const MONTHS = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const I = {
+        home: "M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z",
+        charts: "M21 12A9 9 0 1 1 12 3v9zM15 3.5A9 9 0 0 1 20.5 9H15z",
+        plus: "M12 5v14M5 12h14",
+        bike: "M5.5 20.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM18.5 20.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5.5 17l4-8h5l4 8M9.5 9L8 6H6",
+        settings:
+          "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1",
+        left: "M15 18l-6-6 6-6",
+        right: "M9 18l6-6-6-6",
+        close: "M6 6l12 12M18 6L6 18",
+        check: "M20 6L9 17l-5-5",
+        cloud:
+          "M17.5 19H8a5 5 0 1 1 1-9.9A6 6 0 0 1 20.5 11 4 4 0 0 1 17.5 19z",
+        sun: "M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4",
+        moon: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z",
+        search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5",
+        cal: "M3 5h18v16H3zM3 10h18M8 3v4M16 3v4",
+        rent: "M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z",
+        grocery: "M3 4h2l2.5 11h11L21 7H6.2M9 20h.01M18 20h.01",
+        misc: "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z",
+        bills: "M13 2L4 14h7l-1 8 9-12h-7z",
+        food: "M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 2-3 5-3 8h3v10",
+        petrol:
+          "M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M3 21h12M4 10h10M14 8l3 3v6a1.5 1.5 0 0 0 3 0V8l-3-3",
+        parents:
+          "M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z",
+        tag: "M3 12V4h8l10 10-8 8zM7.5 7.5h.01",
+        wifi: "M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01",
+        phone: "M7 2h10v20H7zM11 18h2",
+        car: "M3 13l2-6h14l2 6v5H3zM7 18v2M17 18v2M3 13h18",
+        bus: "M5 3h14v14H5zM5 11h14M8 20v-3M16 20v-3",
+        repeat:
+          "M17 2l3 3-3 3M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3M20 13v2a4 4 0 0 1-4 4H4",
+        med: "M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z",
+        shirt: "M8 3l4 2 4-2 5 4-3 3-2-1v12H8V9L6 10 3 7z",
+        broom: "M14 3l7 7M12 5l7 7-6 6H7l-2-2v-6z",
+        gift: "M3 9h18v4H3zM5 13h14v8H5zM12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1c2-4 6-4 6-1s-6 1-6 1",
+        box: "M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10",
+        star: "M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z",
+        wrench:
+          "M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z",
+        drop: "M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z",
+        gear: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12l2-1-1-3-2 .3-1.4-1.4.3-2-3-1-1 2h-2l-1-2-3 1 .3 2L5.8 7.3 4 7 3 10l2 1v2l-2 1 1 3 2-.3 1.4 1.4-.3 2 3 1 1-2h2l1 2 3-1-.3-2 1.4-1.4 2 .3 1-3-2-1z",
+        upi: "M7 4l6 8-6 8M13 4l6 8-6 8",
+        credit: "M2 6h20v12H2zM2 10h20M6 15h4",
+        debit: "M2 6h20v12H2zM2 10h20M15 15h3",
+        cash: "M2 7h20v10H2zM12 12h.01M6 12h.01M18 12h.01",
+        transfer: "M4 8h14l-3-3M20 16H6l3 3",
+        trash: "M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13",
+        edit: "M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z",
+        download: "M12 3v12M7 10l5 5 5-5M4 21h16",
+      };
+      const CATS = [
+        {
+          key: "rent",
+          name: "Rent",
+          long: "Rent",
+          icon: "rent",
+          color: "#4F8FE6",
+          subs: ["Rent", "House repairs / work"],
+        },
+        {
+          key: "grocery",
+          name: "Grocery",
+          long: "Grocery",
+          icon: "grocery",
+          color: "#9B7CF2",
+          subs: ["Grocery"],
+        },
+        {
+          key: "misc",
+          name: "Misc",
+          long: "Misc",
+          icon: "misc",
+          color: "#F08A4B",
+          subs: [
+            "Medical",
+            "Clothes & personal",
+            "Domestic help",
+            "Festivals & gifts",
+            "Household items",
+            "Lifestyle fund",
+          ],
+        },
+        {
+          key: "bills",
+          name: "Bills & Travel",
+          long: "Electricity / Transport / Broadband",
+          icon: "bills",
+          color: "#8E97A8",
+          subs: [
+            "Electricity",
+            "Broadband",
+            "Mobile recharge",
+            "Cab / Auto",
+            "Metro / Bus",
+            "Subscriptions",
+          ],
+        },
+        {
+          key: "food",
+          name: "Food",
+          long: "Food / Snacks",
+          icon: "food",
+          color: "#E7B85A",
+          subs: ["Food delivery", "Eating out", "Snacks"],
+        },
+        {
+          key: "petrol",
+          name: "Petrol & Bike",
+          long: "Petrol & Bike",
+          icon: "petrol",
+          color: "#3FB58F",
+          subs: ["Petrol", "Service", "Bike care", "Spare parts"],
+        },
+        {
+          key: "parents",
+          name: "Parents",
+          long: "Parents",
+          icon: "parents",
+          color: "#E9779F",
+          subs: ["Parents"],
+        },
+      ];
+      const SUB_ICON = {
+        Rent: "rent",
+        "House repairs / work": "wrench",
+        Grocery: "grocery",
+        Medical: "med",
+        "Clothes & personal": "shirt",
+        "Domestic help": "broom",
+        "Festivals & gifts": "gift",
+        "Household items": "box",
+        "Lifestyle fund": "star",
+        Electricity: "bills",
+        Broadband: "wifi",
+        "Mobile recharge": "phone",
+        "Cab / Auto": "car",
+        "Metro / Bus": "bus",
+        Subscriptions: "repeat",
+        "Food delivery": "food",
+        "Eating out": "food",
+        Snacks: "food",
+        Petrol: "petrol",
+        Service: "wrench",
+        "Bike care": "drop",
+        "Spare parts": "gear",
+        Parents: "parents",
+      };
+      const DEFAULT_BUDGET = {
+        rent: 20000,
+        grocery: 3000,
+        misc: 2000,
+        bills: 1000,
+        food: 5000,
+        petrol: 4000,
+        parents: 5000,
+      };
+      const METHODS = [
+        { key: "upi", name: "UPI" },
+        { key: "credit", name: "Credit" },
+        { key: "debit", name: "Debit" },
+        { key: "cash", name: "Cash" },
+        { key: "transfer", name: "Transfer" },
+      ];
+      const SOURCES = {
+        tataneu: {
+          name: "Tata Neu Infinity",
+          hint: "RuPay credit · counts to card bill",
+          color: "#4B3A7A",
+        },
+        millennia: {
+          name: "HDFC Millennia",
+          hint: "Credit card",
+          color: "#1F4E8C",
+        },
+        amazon: {
+          name: "Amazon Pay ICICI",
+          hint: "Credit card",
+          color: "#2B2B2B",
+        },
+        hdfcjoint: {
+          name: "HDFC Joint",
+          hint: "Bank account",
+          color: "#1F3A5C",
+        },
+      };
+      const METHOD_SOURCES = {
+        upi: ["tataneu", "hdfcjoint"],
+        credit: ["tataneu", "millennia", "amazon"],
+        debit: ["hdfcjoint"],
+        transfer: ["hdfcjoint"],
+        cash: [],
+      };
+      const CARE = ["Chain clean & lube", "Bike wash", "Both"];
+      const WHO_COLOR = { A: "var(--accentText)", M: "var(--blue)" };
 
-/* ---------------- storage ---------------- */
-function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
-function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast('Phone storage is full. Export a backup in Settings.');return false}}
-let settings=load('et.settings',{url:'',token:'',who:'A',theme:'dark',lubeKm:500});
-let entries=load('et.entries',[]);
-let meta=load('et.meta',{lastServerTs:0,budgets:{},monthTotals:{},rates:null,lastSync:0,error:''});
-let prefs=load('et.prefs',{pay:{}});
-function persist(){save('et.entries',entries);save('et.meta',meta);save('et.prefs',prefs);save('et.settings',settings)}
+      /* ---------------- storage ---------------- */
+      function load(k, d) {
+        try {
+          const v = localStorage.getItem(k);
+          return v ? JSON.parse(v) : d;
+        } catch (e) {
+          return d;
+        }
+      }
+      function save(k, v) {
+        try {
+          localStorage.setItem(k, JSON.stringify(v));
+          return true;
+        } catch (e) {
+          toast("Phone storage is full. Export a backup in Settings.");
+          return false;
+        }
+      }
+      let settings = load("et.settings", {
+        url: "",
+        token: "",
+        who: "A",
+        theme: "dark",
+        lubeKm: 500,
+      });
+      let entries = load("et.entries", []);
+      let meta = load("et.meta", {
+        lastServerTs: 0,
+        budgets: {},
+        monthTotals: {},
+        rates: null,
+        lastSync: 0,
+        error: "",
+      });
+      let prefs = load("et.prefs", { pay: {} });
+      function persist() {
+        save("et.entries", entries);
+        save("et.meta", meta);
+        save("et.prefs", prefs);
+        save("et.settings", settings);
+      }
 
-/* ---------------- helpers ---------------- */
-const $=s=>document.querySelector(s);
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function svg(name,size,sw){return `<svg width="${size||20}" height="${size||20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||2}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${I[name]||I.tag}"></path></svg>`}
-function inr(n,dec){const v=Number(n)||0;return '₹'+v.toLocaleString('en-IN',{maximumFractionDigits:dec===0?0:2})}
-function pad(n){return String(n).padStart(2,'0')}
-function todayStr(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
-function monthOf(dateStr){const [y,m]=dateStr.split('-');return MONTHS[+m-1]+' '+y}
-function ymName(ym){return MONTHS[ym.m-1]+' '+ym.y}
-function shiftYm(ym,d){let t=ym.y*12+(ym.m-1)+d;return {y:Math.floor(t/12),m:t%12+1}}
-function uid(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10)}
-function catOf(key){return CATS.find(c=>c.key===key)||{key,name:key.startsWith('x:')?key.slice(2):key,long:key.slice(2),icon:'tag',color:'#6FA8C9',subs:[],custom:true}}
-function daysSince(dateStr){const [y,m,d]=dateStr.split('-').map(Number);const a=new Date(y,m-1,d);const t=new Date();t.setHours(0,0,0,0);return Math.round((t-a)/86400000)}
-function dayLabel(dateStr){const [y,m,d]=dateStr.split('-').map(Number);const dt=new Date(y,m-1,d);const n=daysSince(dateStr);if(n===0)return 'Today';if(n===1)return 'Yesterday';return dt.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})}
-function payLabel(e){if(!e.method)return 'Imported';const m=METHODS.find(x=>x.key===e.method);const s=SOURCES[e.source];return (m?m.name:e.method)+(s?' · '+s.name:'')}
-function isCard(e){return e.method==='credit'||(e.method==='upi'&&e.source==='tataneu')}
-function live(){return entries.filter(e=>!e.deleted)}
-function monthEntries(name){return live().filter(e=>monthOf(e.date)===name)}
-function customCats(){const s=new Set();live().forEach(e=>{if(e.cat&&e.cat.startsWith('x:'))s.add(e.cat)});return [...s]}
-function subsFor(cat){const base=catOf(cat).subs.slice();live().forEach(e=>{if(e.cat===cat&&e.sub&&!base.includes(e.sub))base.push(e.sub)});return base}
-function budgetsFor(name){const b=meta.budgets[name];const out={};CATS.forEach(c=>{out[c.key]=b&&b[c.key]!=null?b[c.key]:DEFAULT_BUDGET[c.key]});return out}
-function sortDesc(list){return list.sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(b.updatedAt-a.updatedAt))}
-let toastT;function toast(msg){const t=$('#toast');t.innerHTML=`<div class="toast" role="status">${esc(msg)}</div>`;clearTimeout(toastT);toastT=setTimeout(()=>t.innerHTML='',2600)}
+      /* ---------------- helpers ---------------- */
+      const $ = (s) => document.querySelector(s);
+      function esc(s) {
+        return String(s == null ? "" : s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function svg(name, size, sw) {
+        return `<svg width="${size || 20}" height="${size || 20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw || 2}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${I[name] || I.tag}"></path></svg>`;
+      }
+      function inr(n, dec) {
+        const v = Number(n) || 0;
+        return (
+          "₹" +
+          v.toLocaleString("en-IN", {
+            maximumFractionDigits: dec === 0 ? 0 : 2,
+          })
+        );
+      }
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+      function todayStr() {
+        const d = new Date();
+        return (
+          d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate())
+        );
+      }
+      function monthOf(dateStr) {
+        const [y, m] = dateStr.split("-");
+        return MONTHS[+m - 1] + " " + y;
+      }
+      function ymName(ym) {
+        return MONTHS[ym.m - 1] + " " + ym.y;
+      }
+      function shiftYm(ym, d) {
+        let t = ym.y * 12 + (ym.m - 1) + d;
+        return { y: Math.floor(t / 12), m: (t % 12) + 1 };
+      }
+      function uid() {
+        return (
+          Date.now().toString(36) +
+          "-" +
+          Math.random().toString(36).slice(2, 10)
+        );
+      }
+      function catOf(key) {
+        return (
+          CATS.find((c) => c.key === key) || {
+            key,
+            name: key.startsWith("x:") ? key.slice(2) : key,
+            long: key.slice(2),
+            icon: "tag",
+            color: "#6FA8C9",
+            subs: [],
+            custom: true,
+          }
+        );
+      }
+      function daysSince(dateStr) {
+        const [y, m, d] = dateStr.split("-").map(Number);
+        const a = new Date(y, m - 1, d);
+        const t = new Date();
+        t.setHours(0, 0, 0, 0);
+        return Math.round((t - a) / 86400000);
+      }
+      function dayLabel(dateStr) {
+        const [y, m, d] = dateStr.split("-").map(Number);
+        const dt = new Date(y, m - 1, d);
+        const n = daysSince(dateStr);
+        if (n === 0) return "Today";
+        if (n === 1) return "Yesterday";
+        return dt.toLocaleDateString("en-IN", {
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+        });
+      }
+      function payLabel(e) {
+        if (!e.method) return "Imported";
+        const m = METHODS.find((x) => x.key === e.method);
+        const s = SOURCES[e.source];
+        return (m ? m.name : e.method) + (s ? " · " + s.name : "");
+      }
+      function isCard(e) {
+        return (
+          e.method === "credit" ||
+          (e.method === "upi" && e.source === "tataneu")
+        );
+      }
+      function live() {
+        return entries.filter((e) => !e.deleted);
+      }
+      function monthEntries(name) {
+        return live().filter((e) => monthOf(e.date) === name);
+      }
+      function customCats() {
+        const s = new Set();
+        live().forEach((e) => {
+          if (e.cat && e.cat.startsWith("x:")) s.add(e.cat);
+        });
+        return [...s];
+      }
+      function subsFor(cat) {
+        const base = catOf(cat).subs.slice();
+        live().forEach((e) => {
+          if (e.cat === cat && e.sub && !base.includes(e.sub)) base.push(e.sub);
+        });
+        return base;
+      }
+      function budgetsFor(name) {
+        const b = meta.budgets[name];
+        const out = {};
+        CATS.forEach((c) => {
+          out[c.key] = b && b[c.key] != null ? b[c.key] : DEFAULT_BUDGET[c.key];
+        });
+        return out;
+      }
+      function sortDesc(list) {
+        return list.sort((a, b) =>
+          a.date < b.date
+            ? 1
+            : a.date > b.date
+              ? -1
+              : b.updatedAt - a.updatedAt,
+        );
+      }
+      let toastT;
+      function toast(msg) {
+        const t = $("#toast");
+        t.innerHTML = `<div class="toast" role="status">${esc(msg)}</div>`;
+        clearTimeout(toastT);
+        toastT = setTimeout(() => (t.innerHTML = ""), 2600);
+      }
 
-/* ---------------- state ---------------- */
-const now=new Date();
-let view={screen:'home',ym:{y:now.getFullYear(),m:now.getMonth()+1},filter:{who:'all',cat:'all',card:false,q:''},chartMode:'month',bike:{type:'Bike care',activity:'Both',km:'',part:'',cost:'',pay:'upi|hdfcjoint',date:todayStr(),note:''}};
-let syncing=false;
-let draft=null;
+      /* ---------------- state ---------------- */
+      const now = new Date();
+      let view = {
+        screen: "home",
+        ym: { y: now.getFullYear(), m: now.getMonth() + 1 },
+        filter: { who: "all", cat: "all", card: false, q: "" },
+        chartMode: "month",
+        bike: {
+          type: "Bike care",
+          activity: "Both",
+          km: "",
+          part: "",
+          cost: "",
+          pay: "upi|hdfcjoint",
+          date: todayStr(),
+          note: "",
+        },
+      };
+      let syncing = false;
+      let draft = null;
 
-/* ---------------- theme ---------------- */
-function applyTheme(){document.documentElement.setAttribute('data-theme',settings.theme);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=settings.theme==='light'?'#F6F4EF':'#0E1014'}
+      /* ---------------- theme ---------------- */
+      function applyTheme() {
+        document.documentElement.setAttribute("data-theme", settings.theme);
+        const m = document.querySelector("meta[name=theme-color]");
+        if (m) m.content = settings.theme === "light" ? "#F6F4EF" : "#0E1014";
+      }
 
-/* ---------------- render: shell ---------------- */
-function render(){
-  applyTheme();
-  const s=view.screen;
-  const html=s==='home'?homeView():s==='entries'?entriesView():s==='bike'?bikeView():s==='charts'?chartsView():settingsView();
-  $('#app').innerHTML=html;
-  $('#nav').innerHTML=`<div class="in">
-    ${navBtn('home','Home','home')}${navBtn('charts','Charts','charts')}
-    <button class="fab" data-act="add" aria-label="Add expense">${svg('plus',26,2.6)}</button>
-    ${navBtn('bike','Bike','bike')}${navBtn('settings','Settings','settings')}</div>`;
-}
-function navBtn(key,label,icon){const on=view.screen===key||(key==='home'&&view.screen==='entries');return `<button class="${on?'on':''}" data-act="go" data-v="${key}" aria-current="${on?'page':'false'}">${svg(icon,22)}${label}</button>`}
+      /* ---------------- render: shell ---------------- */
+      function render() {
+        applyTheme();
+        const s = view.screen;
+        const html =
+          s === "home"
+            ? homeView()
+            : s === "entries"
+              ? entriesView()
+              : s === "bike"
+                ? bikeView()
+                : s === "charts"
+                  ? chartsView()
+                  : settingsView();
+        $("#app").innerHTML = html;
+        $("#nav").innerHTML = `<div class="in">
+    ${navBtn("home", "Home", "home")}${navBtn("charts", "Charts", "charts")}
+    <button class="fab" data-act="add" aria-label="Add expense">${svg("plus", 26, 2.6)}</button>
+    ${navBtn("bike", "Bike", "bike")}${navBtn("settings", "Settings", "settings")}</div>`;
+      }
+      function navBtn(key, label, icon) {
+        const on =
+          view.screen === key || (key === "home" && view.screen === "entries");
+        return `<button class="${on ? "on" : ""}" data-act="go" data-v="${key}" aria-current="${on ? "page" : "false"}">${svg(icon, 22)}${label}</button>`;
+      }
 
-function monthHeader(){
-  const pending=entries.filter(e=>e.dirty).length;
-  const cls=!settings.url?'off':pending?'pending':'sync';
-  const lbl=!settings.url?'Not connected':pending?pending+' waiting to sync':'Synced';
-  return `<div class="row between">
+      function monthHeader() {
+        const pending = entries.filter((e) => e.dirty).length;
+        const cls = !settings.url ? "off" : pending ? "pending" : "sync";
+        const lbl = !settings.url
+          ? "Not connected"
+          : pending
+            ? pending + " waiting to sync"
+            : "Synced";
+        return `<div class="row between">
     <div class="row gap6">
-      <button class="iconbtn" data-act="month" data-v="-1" aria-label="Previous month">${svg('left',18)}</button>
+      <button class="iconbtn" data-act="month" data-v="-1" aria-label="Previous month">${svg("left", 18)}</button>
       <div class="col" style="padding:0 4px"><span class="k">Month</span><span class="h1">${ymName(view.ym)}</span></div>
-      <button class="iconbtn" data-act="month" data-v="1" aria-label="Next month">${svg('right',18)}</button>
+      <button class="iconbtn" data-act="month" data-v="1" aria-label="Next month">${svg("right", 18)}</button>
     </div>
     <div class="row gap8">
-      <button class="iconbtn ${cls}" id="syncbtn" data-act="sync" aria-label="${lbl}" title="${lbl}">${syncing?'<span class="k">…</span>':svg('cloud',18)}</button>
-      <button class="iconbtn" data-act="theme" aria-label="Switch theme">${svg(settings.theme==='dark'?'sun':'moon',18)}</button>
+      <button class="iconbtn ${cls}" id="syncbtn" data-act="sync" aria-label="${lbl}" title="${lbl}">${syncing ? '<span class="k">…</span>' : svg("cloud", 18)}</button>
+      <button class="iconbtn" data-act="theme" aria-label="Switch theme">${svg(settings.theme === "dark" ? "sun" : "moon", 18)}</button>
     </div></div>`;
-}
+      }
 
-function ratesView(){
-  const r=meta.rates||{};
-  const today=todayStr();
-  const goldFresh=r.goldAt&&r.goldAt.slice(0,10)===today&&navigator.onLine;
-  const niftyFresh=r.niftyAt&&r.niftyAt.slice(0,10)===today&&navigator.onLine;
-  const when=s=>!s?'No rate yet':(s.slice(0,10)===today?'Today, '+s.slice(11,16):'As of '+dayLabel(s.slice(0,10)));
-  const chg=Number(r.niftyChg)||0;
-  return `<div class="grid2">
-    <div class="card badge ${goldFresh?'':'stale'}">
+      function ratesView() {
+        const r = meta.rates || {};
+        const today = todayStr();
+        const goldFresh =
+          r.goldAt && r.goldAt.slice(0, 10) === today && navigator.onLine;
+        const niftyFresh =
+          r.niftyAt && r.niftyAt.slice(0, 10) === today && navigator.onLine;
+        const when = (s) =>
+          !s
+            ? "No rate yet"
+            : s.slice(0, 10) === today
+              ? "Today, " + s.slice(11, 16)
+              : "As of " + dayLabel(s.slice(0, 10));
+        const chg = Number(r.niftyChg) || 0;
+        return `<div class="grid2">
+    <div class="card badge ${goldFresh ? "" : "stale"}">
       <span class="row gap6" style="font-size:12px;font-weight:800;color:var(--accentText)"><span class="dot" style="background:var(--accent)"></span>Gold, Chennai</span>
-      <div class="row between" style="font-size:13px"><span style="color:var(--muted)">22K/g</span><b>${r.gold22?inr(r.gold22,0):'—'}</b></div>
-      <div class="row between" style="font-size:13px"><span style="color:var(--muted)">24K/g</span><b>${r.gold24?inr(r.gold24,0):'—'}</b></div>
+      <div class="row between" style="font-size:13px"><span style="color:var(--muted)">22K/g</span><b>${r.gold22 ? inr(r.gold22, 0) : "—"}</b></div>
+      <div class="row between" style="font-size:13px"><span style="color:var(--muted)">24K/g</span><b>${r.gold24 ? inr(r.gold24, 0) : "—"}</b></div>
       <span class="hint">${when(r.goldAt)}</span>
     </div>
-    <div class="card badge ${niftyFresh?'':'stale'}">
+    <div class="card badge ${niftyFresh ? "" : "stale"}">
       <span class="row gap6" style="font-size:12px;font-weight:800;color:var(--blue)"><span class="dot" style="background:var(--blue)"></span>Nifty 50</span>
-      <span style="font-size:20px;font-weight:800">${r.nifty?Number(r.nifty).toLocaleString('en-IN',{maximumFractionDigits:2}):'—'}</span>
-      <span style="font-size:12px;font-weight:800;color:${chg<0?'var(--overText)':'var(--good)'}">${r.nifty?(chg<0?'▼ ':'▲ ')+Math.abs(chg).toLocaleString('en-IN',{maximumFractionDigits:2})+' ('+Math.abs(Number(r.niftyPct)||0).toFixed(2)+'%)':'&nbsp;'}</span>
+      <span style="font-size:20px;font-weight:800">${r.nifty ? Number(r.nifty).toLocaleString("en-IN", { maximumFractionDigits: 2 }) : "—"}</span>
+      <span style="font-size:12px;font-weight:800;color:${chg < 0 ? "var(--overText)" : "var(--good)"}">${r.nifty ? (chg < 0 ? "▼ " : "▲ ") + Math.abs(chg).toLocaleString("en-IN", { maximumFractionDigits: 2 }) + " (" + Math.abs(Number(r.niftyPct) || 0).toFixed(2) + "%)" : "&nbsp;"}</span>
       <span class="hint">${when(r.niftyAt)}</span>
     </div></div>`;
-}
+      }
 
-/* ---------------- render: home ---------------- */
-function homeView(){
-  const name=ymName(view.ym);
-  const list=monthEntries(name);
-  const b=budgetsFor(name);
-  const budget=CATS.reduce((s,c)=>s+b[c.key],0);
-  const spent=list.reduce((s,e)=>s+e.amount,0);
-  const diff=budget-spent;
-  const cardSpend=list.filter(isCard).reduce((s,e)=>s+e.amount,0);
-  const aSp=list.filter(e=>e.who==='A').reduce((s,e)=>s+e.amount,0);
-  const mSp=list.filter(e=>e.who==='M').reduce((s,e)=>s+e.amount,0);
-  const bill=meta.budgets[name]&&meta.budgets[name].cardBill;
-  const pct=budget?Math.min(100,spent/budget*100):0;
-  const overPart=spent>budget?(spent-budget)/spent*100:0;
-  const tiles=CATS.map(c=>{const s=list.filter(e=>e.cat===c.key).reduce((t,e)=>t+e.amount,0);return tile(c,s,b[c.key])}).join('')+
-    customCats().map(k=>{const s=list.filter(e=>e.cat===k).reduce((t,e)=>t+e.amount,0);return s?tile(catOf(k),s,null):''}).join('');
-  const recent=sortDesc(list.slice()).slice(0,5);
-  return `<div class="col gap18">
+      /* ---------------- render: home ---------------- */
+      function homeView() {
+        const name = ymName(view.ym);
+        const list = monthEntries(name);
+        const b = budgetsFor(name);
+        const budget = CATS.reduce((s, c) => s + b[c.key], 0);
+        const spent = list.reduce((s, e) => s + e.amount, 0);
+        const diff = budget - spent;
+        const cardSpend = list.filter(isCard).reduce((s, e) => s + e.amount, 0);
+        const aSp = list
+          .filter((e) => e.who === "A")
+          .reduce((s, e) => s + e.amount, 0);
+        const mSp = list
+          .filter((e) => e.who === "M")
+          .reduce((s, e) => s + e.amount, 0);
+        const bill = meta.budgets[name] && meta.budgets[name].cardBill;
+        const pct = budget ? Math.min(100, (spent / budget) * 100) : 0;
+        const overPart = spent > budget ? ((spent - budget) / spent) * 100 : 0;
+        const tiles =
+          CATS.map((c) => {
+            const s = list
+              .filter((e) => e.cat === c.key)
+              .reduce((t, e) => t + e.amount, 0);
+            return tile(c, s, b[c.key]);
+          }).join("") +
+          customCats()
+            .map((k) => {
+              const s = list
+                .filter((e) => e.cat === k)
+                .reduce((t, e) => t + e.amount, 0);
+              return s ? tile(catOf(k), s, null) : "";
+            })
+            .join("");
+        const recent = sortDesc(list.slice()).slice(0, 5);
+        return `<div class="col gap18">
     ${monthHeader()}
     ${ratesView()}
     <div class="card" style="padding:18px;border-radius:22px;display:flex;flex-direction:column;gap:14px">
       <div class="row between" style="align-items:flex-start">
-        <div class="col gap4"><span class="k">Spent this month</span><span class="big">${inr(spent,0)}</span><span style="font-size:13px;color:var(--muted)">of ${inr(budget,0)} budget, insurance excluded</span></div>
-        <span class="chip ${diff<0?'over':'ok'}">${diff<0?'Over '+inr(-diff,0):inr(diff,0)+' left'}</span>
+        <div class="col gap4"><span class="k">Spent this month</span><span class="big">${inr(spent, 0)}</span><span style="font-size:13px;color:var(--muted)">of ${inr(budget, 0)} budget, insurance excluded</span></div>
+        <span class="chip ${diff < 0 ? "over" : "ok"}">${diff < 0 ? "Over " + inr(-diff, 0) : inr(diff, 0) + " left"}</span>
       </div>
-      <div class="bar" role="img" aria-label="${Math.round(spent/(budget||1)*100)}% of budget used"><div style="width:${spent>budget?100-overPart:pct}%;background:var(--accent)"></div>${overPart?`<div style="width:${overPart}%;background:var(--over)"></div>`:''}</div>
+      <div class="bar" role="img" aria-label="${Math.round((spent / (budget || 1)) * 100)}% of budget used"><div style="width:${spent > budget ? 100 - overPart : pct}%;background:var(--accent)"></div>${overPart ? `<div style="width:${overPart}%;background:var(--over)"></div>` : ""}</div>
       <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
-        <div class="mini"><span class="k" style="font-size:11px">Card spends</span><b>${inr(cardSpend,0)}</b></div>
-        <div class="mini"><span class="k" style="font-size:11px">${bill?'Unlogged card':'Card bill'}</span><b ${bill&&bill-cardSpend>0?'class="over-t"':''}>${bill?inr(Math.max(0,bill-cardSpend),0):'Add in sheet'}</b></div>
-        <div class="mini"><span class="k" style="font-size:11px">Who paid</span><span style="font-size:12px;font-weight:800;line-height:1.35">A ${inr(aSp,0)}<br>M ${inr(mSp,0)}</span></div>
+        <div class="mini"><span class="k" style="font-size:11px">Card spends</span><b>${inr(cardSpend, 0)}</b></div>
+        <div class="mini"><span class="k" style="font-size:11px">${bill ? "Unlogged card" : "Card bill"}</span><b ${bill && bill - cardSpend > 0 ? 'class="over-t"' : ""}>${bill ? inr(Math.max(0, bill - cardSpend), 0) : "Add in sheet"}</b></div>
+        <div class="mini"><span class="k" style="font-size:11px">Who paid</span><span style="font-size:12px;font-weight:800;line-height:1.35">A ${inr(aSp, 0)}<br>M ${inr(mSp, 0)}</span></div>
       </div>
     </div>
     <div class="row between"><h2 class="h2">Budget by category</h2><span class="k">tap a tile for entries</span></div>
-    <div class="grid2">${tiles}<button class="tile add" data-act="add" data-v="custom">${svg('plus',22,2.2)}Custom category</button></div>
+    <div class="grid2">${tiles}<button class="tile add" data-act="add" data-v="custom">${svg("plus", 22, 2.2)}Custom category</button></div>
     <div class="row between" style="margin-top:4px"><h2 class="h2">Recent</h2><button class="pill" data-act="entries" data-v="all">See all</button></div>
-    ${recent.length?`<div class="list">${recent.map(entryRow).join('')}</div>`:`<div class="card empty">No expenses in ${name} yet. Tap + to add one.</div>`}
+    ${recent.length ? `<div class="list">${recent.map(entryRow).join("")}</div>` : `<div class="card empty">No expenses in ${name} yet. Tap + to add one.</div>`}
   </div>`;
-}
-function tile(c,s,b){
-  const C=100.53;const over=b!=null&&s>b;const ratio=b?s/b:0;
-  return `<button class="tile ${over?'over':''}" data-act="entries" data-v="${esc(c.key)}">
+      }
+      function tile(c, s, b) {
+        const C = 100.53;
+        const over = b != null && s > b;
+        const ratio = b ? s / b : 0;
+        return `<button class="tile ${over ? "over" : ""}" data-act="entries" data-v="${esc(c.key)}">
     <div class="row between" style="width:100%">
-      ${b!=null?`<div style="position:relative;width:42px;height:42px"><svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><g transform="rotate(-90 21 21)" fill="none" stroke-width="5"><circle cx="21" cy="21" r="16" stroke="var(--track)"></circle><circle cx="21" cy="21" r="16" stroke="${over?'var(--over)':'var(--accent)'}" stroke-linecap="round" stroke-dasharray="${(Math.min(1,ratio)*C).toFixed(2)} ${C}"></circle></g></svg><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;${over?'color:var(--overText)':''}">${Math.round(ratio*100)}%</span></div>`:`<span class="av" style="color:${c.color}">${svg(c.icon,18)}</span>`}
-      ${b!=null?`<span class="chip ${over?'over':'ok'}" style="font-size:11px">${over?'Over '+inr(s-b,0):inr(b-s,0)+' left'}</span>`:'<span class="chip ok" style="font-size:11px">Rolls into Misc</span>'}
+      ${b != null ? `<div style="position:relative;width:42px;height:42px"><svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><g transform="rotate(-90 21 21)" fill="none" stroke-width="5"><circle cx="21" cy="21" r="16" stroke="var(--track)"></circle><circle cx="21" cy="21" r="16" stroke="${over ? "var(--over)" : "var(--accent)"}" stroke-linecap="round" stroke-dasharray="${(Math.min(1, ratio) * C).toFixed(2)} ${C}"></circle></g></svg><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;${over ? "color:var(--overText)" : ""}">${Math.round(ratio * 100)}%</span></div>` : `<span class="av" style="color:${c.color}">${svg(c.icon, 18)}</span>`}
+      ${b != null ? `<span class="chip ${over ? "over" : "ok"}" style="font-size:11px">${over ? "Over " + inr(s - b, 0) : inr(b - s, 0) + " left"}</span>` : '<span class="chip ok" style="font-size:11px">Rolls into Misc</span>'}
     </div>
-    <span style="font-size:13px;font-weight:700;color:var(--soft);min-height:34px;line-height:1.3">${esc(c.long||c.name)}</span>
-    <div class="col gap4"><span style="font-size:20px;font-weight:800;${over?'color:var(--overText)':''}">${inr(s,0)}</span><span style="font-size:12px;color:var(--faint)">${b!=null?'of '+inr(b,0):'no budget'}</span></div>
+    <span style="font-size:13px;font-weight:700;color:var(--soft);min-height:34px;line-height:1.3">${esc(c.long || c.name)}</span>
+    <div class="col gap4"><span style="font-size:20px;font-weight:800;${over ? "color:var(--overText)" : ""}">${inr(s, 0)}</span><span style="font-size:12px;color:var(--faint)">${b != null ? "of " + inr(b, 0) : "no budget"}</span></div>
   </button>`;
-}
-function entryRow(e){
-  const c=catOf(e.cat);
-  return `<button class="item" data-act="edit" data-v="${esc(e.id)}">
-    <span class="av" style="color:${WHO_COLOR[e.who]||'inherit'}">${esc(e.who)}</span>
-    <span class="col gap4" style="flex:1;min-width:0"><span class="ellip" style="font-size:14px;font-weight:700">${esc(e.sub||c.name)}${e.note?' <span style="font-weight:500;color:var(--muted)">· '+esc(e.note)+'</span>':''}</span>
-    <span class="ellip" style="font-size:12px;color:var(--muted)">${esc(c.name)} · ${esc(payLabel(e))}${e.dirty?' · not synced':''}</span></span>
+      }
+      function entryRow(e) {
+        const c = catOf(e.cat);
+        return `<button class="item" data-act="edit" data-v="${esc(e.id)}">
+    <span class="av" style="color:${WHO_COLOR[e.who] || "inherit"}">${esc(e.who)}</span>
+    <span class="col gap4" style="flex:1;min-width:0"><span class="ellip" style="font-size:14px;font-weight:700">${esc(e.sub || c.name)}${e.note ? ' <span style="font-weight:500;color:var(--muted)">· ' + esc(e.note) + "</span>" : ""}</span>
+    <span class="ellip" style="font-size:12px;color:var(--muted)">${esc(c.name)} · ${esc(payLabel(e))}${e.dirty ? " · not synced" : ""}</span></span>
     <span style="font-size:15px;font-weight:800">${inr(e.amount)}</span></button>`;
-}
+      }
 
-/* ---------------- render: entries ---------------- */
-function entriesView(){
-  const name=ymName(view.ym);const f=view.filter;
-  let list=monthEntries(name);
-  if(f.who!=='all')list=list.filter(e=>e.who===f.who);
-  if(f.card)list=list.filter(isCard);
-  if(f.cat!=='all')list=list.filter(e=>e.cat===f.cat);
-  if(f.q){const q=f.q.toLowerCase();list=list.filter(e=>[e.sub,e.note,catOf(e.cat).name,String(e.amount),payLabel(e)].join(' ').toLowerCase().includes(q))}
-  sortDesc(list);
-  const total=list.reduce((s,e)=>s+e.amount,0);
-  const groups=[];list.forEach(e=>{let g=groups[groups.length-1];if(!g||g.date!==e.date){g={date:e.date,items:[]};groups.push(g)}g.items.push(e)});
-  const catOpts=['all',...CATS.map(c=>c.key),...customCats()];
-  return `<div class="col gap16">
-    <div class="row gap10"><button class="iconbtn" data-act="go" data-v="home" aria-label="Back">${svg('left',18)}</button>
+      /* ---------------- render: entries ---------------- */
+      function entriesView() {
+        const name = ymName(view.ym);
+        const f = view.filter;
+        let list = monthEntries(name);
+        if (f.who !== "all") list = list.filter((e) => e.who === f.who);
+        if (f.card) list = list.filter(isCard);
+        if (f.cat !== "all") list = list.filter((e) => e.cat === f.cat);
+        if (f.q) {
+          const q = f.q.toLowerCase();
+          list = list.filter((e) =>
+            [e.sub, e.note, catOf(e.cat).name, String(e.amount), payLabel(e)]
+              .join(" ")
+              .toLowerCase()
+              .includes(q),
+          );
+        }
+        sortDesc(list);
+        const total = list.reduce((s, e) => s + e.amount, 0);
+        const groups = [];
+        list.forEach((e) => {
+          let g = groups[groups.length - 1];
+          if (!g || g.date !== e.date) {
+            g = { date: e.date, items: [] };
+            groups.push(g);
+          }
+          g.items.push(e);
+        });
+        const catOpts = ["all", ...CATS.map((c) => c.key), ...customCats()];
+        return `<div class="col gap16">
+    <div class="row gap10"><button class="iconbtn" data-act="go" data-v="home" aria-label="Back">${svg("left", 18)}</button>
       <div class="col" style="flex:1"><span class="k">Entries</span><span class="h1">${name}</span></div>
-      <button class="iconbtn" data-act="month" data-v="-1" aria-label="Previous month">${svg('left',16)}</button><button class="iconbtn" data-act="month" data-v="1" aria-label="Next month">${svg('right',16)}</button></div>
-    <label class="row gap10 card" style="height:46px;padding:0 14px;border-radius:14px"><span style="color:var(--faint)">${svg('search',17)}</span>
+      <button class="iconbtn" data-act="month" data-v="-1" aria-label="Previous month">${svg("left", 16)}</button><button class="iconbtn" data-act="month" data-v="1" aria-label="Next month">${svg("right", 16)}</button></div>
+    <label class="row gap10 card" style="height:46px;padding:0 14px;border-radius:14px"><span style="color:var(--faint)">${svg("search", 17)}</span>
       <input id="q" class="field" style="border:none;background:transparent;padding:0;height:44px" placeholder="Search notes, type, amount" value="${esc(f.q)}" aria-label="Search entries"></label>
     <div class="row gap8" style="flex-wrap:wrap">
-      ${['all','A','M'].map(w=>`<button class="pill ${f.who===w?'on':''}" data-act="fwho" data-v="${w}">${w==='all'?'All':w}</button>`).join('')}
-      <button class="pill ${f.card?'on':''}" data-act="fcard">Card</button>
-      <select class="pill ${f.cat!=='all'?'on':''}" id="fcat" aria-label="Filter by category" style="appearance:auto">${catOpts.map(k=>`<option value="${esc(k)}" ${f.cat===k?'selected':''}>${k==='all'?'All categories':esc(catOf(k).name)}</option>`).join('')}</select>
+      ${["all", "A", "M"].map((w) => `<button class="pill ${f.who === w ? "on" : ""}" data-act="fwho" data-v="${w}">${w === "all" ? "All" : w}</button>`).join("")}
+      <button class="pill ${f.card ? "on" : ""}" data-act="fcard">Card</button>
+      <select class="pill ${f.cat !== "all" ? "on" : ""}" id="fcat" aria-label="Filter by category" style="appearance:auto">${catOpts.map((k) => `<option value="${esc(k)}" ${f.cat === k ? "selected" : ""}>${k === "all" ? "All categories" : esc(catOf(k).name)}</option>`).join("")}</select>
     </div>
-    <div class="row between" style="font-size:13px;color:var(--muted)"><span>${list.length} ${list.length===1?'entry':'entries'}</span><b style="color:var(--text)">${inr(total)}</b></div>
-    ${groups.length?groups.map(g=>`<div class="col gap8"><div class="row between" style="font-size:12px;font-weight:800;color:var(--muted)"><span>${dayLabel(g.date)}</span><span>${inr(g.items.reduce((s,e)=>s+e.amount,0))}</span></div><div class="list">${g.items.map(entryRow).join('')}</div></div>`).join(''):`<div class="card empty">Nothing matches. Clear a filter or pick another month.</div>`}
+    <div class="row between" style="font-size:13px;color:var(--muted)"><span>${list.length} ${list.length === 1 ? "entry" : "entries"}</span><b style="color:var(--text)">${inr(total)}</b></div>
+    ${groups.length ? groups.map((g) => `<div class="col gap8"><div class="row between" style="font-size:12px;font-weight:800;color:var(--muted)"><span>${dayLabel(g.date)}</span><span>${inr(g.items.reduce((s, e) => s + e.amount, 0))}</span></div><div class="list">${g.items.map(entryRow).join("")}</div></div>`).join("") : `<div class="card empty">Nothing matches. Clear a filter or pick another month.</div>`}
   </div>`;
-}
+      }
 
-/* ---------------- render: bike ---------------- */
-function bikeView(){
-  const ev=live().filter(e=>e.cat==='petrol');sortDesc(ev);
-  const maxKm=Math.max(0,...ev.map(e=>Number(e.km)||0));
-  const find=fn=>ev.find(fn);
-  const stat=(name,e,tint,due)=>{
-    const days=e?daysSince(e.date):null;
-    const kmSince=e&&e.km&&maxKm?maxKm-Number(e.km):null;
-    return `<div class="card pad col gap6" style="border-radius:16px;${due?'border-color:var(--overLine)':''}"><span style="font-size:12px;font-weight:800;color:${tint}">${name}</span>
-      <span style="font-size:18px;font-weight:800">${e?(days===0?'Today':days+' days'):'Not logged'}</span>
-      <span class="hint">${e?(kmSince!=null?kmSince.toLocaleString('en-IN')+' km since':(e.part?esc(e.part):'no km logged')):'Log it below'}</span></div>`};
-  const lube=find(e=>e.sub==='Bike care'&&/chain|both/i.test(e.activity||''));
-  const wash=find(e=>e.sub==='Bike care'&&/wash|both/i.test(e.activity||''));
-  const svc=find(e=>e.sub==='Service');
-  const part=find(e=>e.sub==='Spare parts');
-  const lubeDue=lube&&lube.km&&maxKm&&maxKm-Number(lube.km)>=Number(settings.lubeKm||500);
-  const b=view.bike;
-  const payOpts=[['upi|tataneu','UPI · Tata Neu Infinity'],['upi|hdfcjoint','UPI · HDFC Joint'],['credit|tataneu','Credit · Tata Neu Infinity'],['credit|millennia','Credit · HDFC Millennia'],['credit|amazon','Credit · Amazon Pay ICICI'],['debit|hdfcjoint','Debit · HDFC Joint'],['cash|','Cash']];
-  return `<div class="col gap16">
-    <div class="row between"><div class="col"><span class="k">Petrol &amp; Bike</span><span class="h1">Bike care</span></div><span class="chip ok" style="font-size:12px">Odo ${maxKm?maxKm.toLocaleString('en-IN')+' km':'—'}</span></div>
-    <div class="grid2" style="gap:8px">${stat('Chain lube',lube,'var(--overText)',lubeDue)}${stat('Wash',wash,'var(--blue)')}${stat('Service',svc,'var(--good)')}${stat('Spare parts',part,'#9B7CF2')}</div>
+      /* ---------------- render: bike ---------------- */
+      function bikeView() {
+        const ev = live().filter((e) => e.cat === "petrol");
+        sortDesc(ev);
+        const maxKm = Math.max(0, ...ev.map((e) => Number(e.km) || 0));
+        const find = (fn) => ev.find(fn);
+        const stat = (name, e, tint, due) => {
+          const days = e ? daysSince(e.date) : null;
+          const kmSince = e && e.km && maxKm ? maxKm - Number(e.km) : null;
+          return `<div class="card pad col gap6" style="border-radius:16px;${due ? "border-color:var(--overLine)" : ""}"><span style="font-size:12px;font-weight:800;color:${tint}">${name}</span>
+      <span style="font-size:18px;font-weight:800">${e ? (days === 0 ? "Today" : days + " days") : "Not logged"}</span>
+      <span class="hint">${e ? (kmSince != null ? kmSince.toLocaleString("en-IN") + " km since" : e.part ? esc(e.part) : "no km logged") : "Log it below"}</span></div>`;
+        };
+        const lube = find(
+          (e) => e.sub === "Bike care" && /chain|both/i.test(e.activity || ""),
+        );
+        const wash = find(
+          (e) => e.sub === "Bike care" && /wash|both/i.test(e.activity || ""),
+        );
+        const svc = find((e) => e.sub === "Service");
+        const part = find((e) => e.sub === "Spare parts");
+        const lubeDue =
+          lube &&
+          lube.km &&
+          maxKm &&
+          maxKm - Number(lube.km) >= Number(settings.lubeKm || 500);
+        const b = view.bike;
+        const payOpts = [
+          ["upi|tataneu", "UPI · Tata Neu Infinity"],
+          ["upi|hdfcjoint", "UPI · HDFC Joint"],
+          ["credit|tataneu", "Credit · Tata Neu Infinity"],
+          ["credit|millennia", "Credit · HDFC Millennia"],
+          ["credit|amazon", "Credit · Amazon Pay ICICI"],
+          ["debit|hdfcjoint", "Debit · HDFC Joint"],
+          ["cash|", "Cash"],
+        ];
+        return `<div class="col gap16">
+    <div class="row between"><div class="col"><span class="k">Petrol &amp; Bike</span><span class="h1">Bike care</span></div><span class="chip ok" style="font-size:12px">Odo ${maxKm ? maxKm.toLocaleString("en-IN") + " km" : "—"}</span></div>
+    <div class="grid2" style="gap:8px">${stat("Chain lube", lube, "var(--overText)", lubeDue)}${stat("Wash", wash, "var(--blue)")}${stat("Service", svc, "var(--good)")}${stat("Spare parts", part, "#9B7CF2")}</div>
     <div class="card col gap12" style="padding:16px;border-radius:20px">
       <span class="label" style="font-size:15px">Log entry</span>
-      <div class="seg" style="grid-template-columns:repeat(4,minmax(0,1fr))">${['Petrol','Service','Bike care','Spare parts'].map(t=>`<button class="${b.type===t?'on':''}" data-act="btype" data-v="${t}">${t==='Spare parts'?'Parts':t==='Bike care'?'Care':t}</button>`).join('')}</div>
+      <div class="seg" style="grid-template-columns:repeat(4,minmax(0,1fr))">${["Petrol", "Service", "Bike care", "Spare parts"].map((t) => `<button class="${b.type === t ? "on" : ""}" data-act="btype" data-v="${t}">${t === "Spare parts" ? "Parts" : t === "Bike care" ? "Care" : t}</button>`).join("")}</div>
       <div class="grid2"><label class="col gap6"><span class="k">Date</span><input type="date" class="field" id="b-date" value="${esc(b.date)}" max="${todayStr()}"></label>
         <label class="col gap6"><span class="k">Odometer (km)</span><input class="field" id="b-km" inputmode="numeric" placeholder="Current reading" value="${esc(b.km)}"></label></div>
-      ${b.type==='Bike care'?`<div class="col gap8"><span class="k">What did you do?</span><div class="row gap8" style="flex-wrap:wrap">${CARE.map(a=>`<button class="pill ${b.activity===a?'on':''}" data-act="bact" data-v="${a}">${a}</button>`).join('')}<button class="pill ${!CARE.includes(b.activity)?'on':'dash'}" data-act="bact" data-v="">Custom</button></div>
-        ${!CARE.includes(b.activity)?`<input class="field" id="b-act" placeholder="e.g. tyre pressure, brake check" value="${esc(b.activity)}" style="border-style:dashed">`:''}</div>`:''}
-      ${b.type==='Spare parts'?`<label class="col gap6"><span class="k">Part</span><input class="field" id="b-part" placeholder="e.g. brake pads, chain sprocket" value="${esc(b.part)}"></label>`:''}
-      ${b.type==='Service'?`<label class="col gap6"><span class="k">What was done (optional)</span><input class="field" id="b-act" placeholder="e.g. general service, oil change" value="${esc(b.activity)}"></label>`:''}
+      ${
+        b.type === "Bike care"
+          ? `<div class="col gap8"><span class="k">What did you do?</span><div class="row gap8" style="flex-wrap:wrap">${CARE.map((a) => `<button class="pill ${b.activity === a ? "on" : ""}" data-act="bact" data-v="${a}">${a}</button>`).join("")}<button class="pill ${!CARE.includes(b.activity) ? "on" : "dash"}" data-act="bact" data-v="">Custom</button></div>
+        ${!CARE.includes(b.activity) ? `<input class="field" id="b-act" placeholder="e.g. tyre pressure, brake check" value="${esc(b.activity)}" style="border-style:dashed">` : ""}</div>`
+          : ""
+      }
+      ${b.type === "Spare parts" ? `<label class="col gap6"><span class="k">Part</span><input class="field" id="b-part" placeholder="e.g. brake pads, chain sprocket" value="${esc(b.part)}"></label>` : ""}
+      ${b.type === "Service" ? `<label class="col gap6"><span class="k">What was done (optional)</span><input class="field" id="b-act" placeholder="e.g. general service, oil change" value="${esc(b.activity)}"></label>` : ""}
       <div class="grid2"><label class="col gap6"><span class="k">Cost</span><input class="field" id="b-cost" inputmode="decimal" placeholder="₹ 0" value="${esc(b.cost)}"></label>
-        <label class="col gap6"><span class="k">Paid with</span><select class="field" id="b-pay">${payOpts.map(([v,l])=>`<option value="${v}" ${b.pay===v?'selected':''}>${l}</option>`).join('')}</select></label></div>
+        <label class="col gap6"><span class="k">Paid with</span><select class="field" id="b-pay">${payOpts.map(([v, l]) => `<option value="${v}" ${b.pay === v ? "selected" : ""}>${l}</option>`).join("")}</select></label></div>
       <button class="primary" data-act="bsave" style="height:50px;font-size:15px">Save to bike log</button>
       <span class="hint" style="text-align:center">A ₹0 entry (e.g. a self chain lube) still records the date and km</span>
     </div>
     <h2 class="h2">History</h2>
-    ${ev.length?`<div class="list">${ev.slice(0,30).map(e=>`<button class="item" data-act="edit" data-v="${esc(e.id)}"><span class="dot" style="width:10px;height:10px;background:${e.sub==='Petrol'?'var(--blue)':e.sub==='Service'?'var(--good)':e.sub==='Spare parts'?'#9B7CF2':'var(--accent)'}"></span>
-      <span class="col gap4" style="flex:1;min-width:0"><span class="ellip" style="font-size:14px;font-weight:700">${esc(e.sub)}${e.activity?' · '+esc(e.activity):''}${e.part?' · '+esc(e.part):''}</span><span class="hint" style="font-size:12px;color:var(--muted)">${dayLabel(e.date)}${e.km?' · '+Number(e.km).toLocaleString('en-IN')+' km':''} · ${esc(e.who)}</span></span>
-      <span style="font-size:14px;font-weight:800">${inr(e.amount)}</span></button>`).join('')}</div>`:`<div class="card empty">No petrol or bike entries yet.</div>`}
+    ${
+      ev.length
+        ? `<div class="list">${ev
+            .slice(0, 30)
+            .map(
+              (
+                e,
+              ) => `<button class="item" data-act="edit" data-v="${esc(e.id)}"><span class="dot" style="width:10px;height:10px;background:${e.sub === "Petrol" ? "var(--blue)" : e.sub === "Service" ? "var(--good)" : e.sub === "Spare parts" ? "#9B7CF2" : "var(--accent)"}"></span>
+      <span class="col gap4" style="flex:1;min-width:0"><span class="ellip" style="font-size:14px;font-weight:700">${esc(e.sub)}${e.activity ? " · " + esc(e.activity) : ""}${e.part ? " · " + esc(e.part) : ""}</span><span class="hint" style="font-size:12px;color:var(--muted)">${dayLabel(e.date)}${e.km ? " · " + Number(e.km).toLocaleString("en-IN") + " km" : ""} · ${esc(e.who)}</span></span>
+      <span style="font-size:14px;font-weight:800">${inr(e.amount)}</span></button>`,
+            )
+            .join("")}</div>`
+        : `<div class="card empty">No petrol or bike entries yet.</div>`
+    }
   </div>`;
-}
+      }
 
-/* ---------------- render: charts ---------------- */
-function chartsView(){
-  const name=ymName(view.ym);
-  const list=monthEntries(name);const b=budgetsFor(name);
-  const total=list.reduce((s,e)=>s+e.amount,0);
-  const byCat={};list.forEach(e=>{byCat[e.cat]=(byCat[e.cat]||0)+e.amount});
-  const slices=Object.entries(byCat).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
-  const C=439.82;let off=0;
-  const arcs=slices.map(([k,v])=>{const len=total?v/total*C:0;const s=`<circle cx="85" cy="85" r="70" stroke="${catOf(k).color}" stroke-dasharray="${len.toFixed(2)} ${C}" stroke-dashoffset="${(-off).toFixed(2)}"></circle>`;off+=len;return s}).join('');
-  const over=CATS.map(c=>({c,s:byCat[c.key]||0,b:b[c.key]})).filter(x=>x.s>x.b).sort((a,b)=>(b.s-b.b)-(a.s-a.b));
-  const cards=['tataneu','millennia','amazon'].map(k=>[k,list.filter(e=>isCard(e)&&e.source===k).reduce((s,e)=>s+e.amount,0)]);
-  const aSp=list.filter(e=>e.who==='A').reduce((s,e)=>s+e.amount,0),mSp=total-aSp;
-  const seg=`<div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${view.chartMode==='month'?'on':''}" data-act="cmode" data-v="month">This month</button><button class="${view.chartMode==='trend'?'on':''}" data-act="cmode" data-v="trend">6 months</button></div>`;
-  if(view.chartMode==='trend')return trendView(seg);
-  return `<div class="col gap16">
-    <div class="row between"><div class="col"><span class="k">Charts</span><span class="h1">${name}</span></div><div class="row gap6"><button class="iconbtn" data-act="month" data-v="-1" aria-label="Previous month">${svg('left',16)}</button><button class="iconbtn" data-act="month" data-v="1" aria-label="Next month">${svg('right',16)}</button></div></div>
+      /* ---------------- render: charts ---------------- */
+      function chartsView() {
+        const name = ymName(view.ym);
+        const list = monthEntries(name);
+        const b = budgetsFor(name);
+        const total = list.reduce((s, e) => s + e.amount, 0);
+        const byCat = {};
+        list.forEach((e) => {
+          byCat[e.cat] = (byCat[e.cat] || 0) + e.amount;
+        });
+        const slices = Object.entries(byCat)
+          .filter(([, v]) => v > 0)
+          .sort((a, b) => b[1] - a[1]);
+        const C = 439.82;
+        let off = 0;
+        const arcs = slices
+          .map(([k, v]) => {
+            const len = total ? (v / total) * C : 0;
+            const s = `<circle cx="85" cy="85" r="70" stroke="${catOf(k).color}" stroke-dasharray="${len.toFixed(2)} ${C}" stroke-dashoffset="${(-off).toFixed(2)}"></circle>`;
+            off += len;
+            return s;
+          })
+          .join("");
+        const over = CATS.map((c) => ({ c, s: byCat[c.key] || 0, b: b[c.key] }))
+          .filter((x) => x.s > x.b)
+          .sort((a, b) => b.s - b.b - (a.s - a.b));
+        const cards = ["tataneu", "millennia", "amazon"].map((k) => [
+          k,
+          list
+            .filter((e) => isCard(e) && e.source === k)
+            .reduce((s, e) => s + e.amount, 0),
+        ]);
+        const aSp = list
+            .filter((e) => e.who === "A")
+            .reduce((s, e) => s + e.amount, 0),
+          mSp = total - aSp;
+        const seg = `<div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${view.chartMode === "month" ? "on" : ""}" data-act="cmode" data-v="month">This month</button><button class="${view.chartMode === "trend" ? "on" : ""}" data-act="cmode" data-v="trend">6 months</button></div>`;
+        if (view.chartMode === "trend") return trendView(seg);
+        return `<div class="col gap16">
+    <div class="row between"><div class="col"><span class="k">Charts</span><span class="h1">${name}</span></div><div class="row gap6"><button class="iconbtn" data-act="month" data-v="-1" aria-label="Previous month">${svg("left", 16)}</button><button class="iconbtn" data-act="month" data-v="1" aria-label="Next month">${svg("right", 16)}</button></div></div>
     ${seg}
     <div class="card col gap12" style="padding:18px;border-radius:22px"><span class="label" style="font-size:15px">Where it went</span>
-      ${total?`<div class="row gap16"><div style="position:relative;width:170px;height:170px;flex-shrink:0"><svg width="170" height="170" viewBox="0 0 170 170" role="img" aria-label="Spending split by category"><g transform="rotate(-90 85 85)" fill="none" stroke-width="22"><circle cx="85" cy="85" r="70" stroke="var(--track)"></circle>${arcs}</g></svg>
-        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="k" style="font-size:11px">Total</span><span style="font-size:18px;font-weight:800">${inr(total,0)}</span></div></div>
-        <div class="col gap8" style="flex:1;min-width:0">${slices.map(([k,v])=>`<div class="row gap8" style="font-size:12px"><span style="width:10px;height:10px;border-radius:3px;background:${catOf(k).color};flex-shrink:0"></span><span class="ellip" style="flex:1;color:var(--soft);font-weight:600">${esc(catOf(k).name)}</span><b>${Math.round(v/total*100)}%</b></div>`).join('')}</div></div>`:`<div class="empty">No spending logged for this month.</div>`}
+      ${
+        total
+          ? `<div class="row gap16"><div style="position:relative;width:170px;height:170px;flex-shrink:0"><svg width="170" height="170" viewBox="0 0 170 170" role="img" aria-label="Spending split by category"><g transform="rotate(-90 85 85)" fill="none" stroke-width="22"><circle cx="85" cy="85" r="70" stroke="var(--track)"></circle>${arcs}</g></svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="k" style="font-size:11px">Total</span><span style="font-size:18px;font-weight:800">${inr(total, 0)}</span></div></div>
+        <div class="col gap8" style="flex:1;min-width:0">${slices.map(([k, v]) => `<div class="row gap8" style="font-size:12px"><span style="width:10px;height:10px;border-radius:3px;background:${catOf(k).color};flex-shrink:0"></span><span class="ellip" style="flex:1;color:var(--soft);font-weight:600">${esc(catOf(k).name)}</span><b>${Math.round((v / total) * 100)}%</b></div>`).join("")}</div></div>`
+          : `<div class="empty">No spending logged for this month.</div>`
+      }
     </div>
-    <div class="card col gap12" style="padding:18px;border-radius:22px"><div class="row between"><span class="label" style="font-size:15px">Over budget</span><span class="k ${over.length?'over-t':''}" style="font-weight:700">${over.length?over.length+(over.length===1?' category':' categories'):'None'}</span></div>
-      ${over.length?over.map(x=>`<div class="col gap6"><div class="row between" style="font-size:13px"><b>${esc(x.c.name)}</b><b class="over-t">+${inr(x.s-x.b,0)}</b></div><div class="bar" style="height:8px"><div style="width:100%;background:var(--over)"></div></div><span class="hint" style="color:var(--muted)">${inr(x.s,0)} spent of ${inr(x.b,0)} · ${Math.round(x.s/x.b*100)}%</span></div>`).join(''):'<span class="k">Every category is within budget.</span>'}
+    <div class="card col gap12" style="padding:18px;border-radius:22px"><div class="row between"><span class="label" style="font-size:15px">Over budget</span><span class="k ${over.length ? "over-t" : ""}" style="font-weight:700">${over.length ? over.length + (over.length === 1 ? " category" : " categories") : "None"}</span></div>
+      ${over.length ? over.map((x) => `<div class="col gap6"><div class="row between" style="font-size:13px"><b>${esc(x.c.name)}</b><b class="over-t">+${inr(x.s - x.b, 0)}</b></div><div class="bar" style="height:8px"><div style="width:100%;background:var(--over)"></div></div><span class="hint" style="color:var(--muted)">${inr(x.s, 0)} spent of ${inr(x.b, 0)} · ${Math.round((x.s / x.b) * 100)}%</span></div>`).join("") : '<span class="k">Every category is within budget.</span>'}
     </div>
     <div class="grid2">
-      <div class="card col gap8 pad"><span class="label">By card</span>${cards.map(([k,v])=>`<div class="row between" style="font-size:12px"><span style="color:var(--soft)">${SOURCES[k].name.replace('HDFC ','').replace(' Infinity',' Inf.')}</span><b>${inr(v,0)}</b></div>`).join('')}
-        ${meta.budgets[name]&&meta.budgets[name].cardBill?`<div class="row between" style="font-size:12px;border-top:1px solid var(--line);padding-top:8px"><span style="color:var(--muted)">Bill</span><b>${inr(meta.budgets[name].cardBill,0)}</b></div>`:''}</div>
-      <div class="card col gap8 pad"><span class="label">Who paid</span><div class="bar"><div style="width:${total?aSp/total*100:0}%;background:var(--accent)"></div><div style="width:${total?mSp/total*100:0}%;background:var(--blue)"></div></div>
-        <div class="row between" style="font-size:12px"><span style="color:var(--soft)">A</span><b>${inr(aSp,0)}</b></div><div class="row between" style="font-size:12px"><span style="color:var(--soft)">M</span><b>${inr(mSp,0)}</b></div></div>
+      <div class="card col gap8 pad"><span class="label">By card</span>${cards.map(([k, v]) => `<div class="row between" style="font-size:12px"><span style="color:var(--soft)">${SOURCES[k].name.replace("HDFC ", "").replace(" Infinity", " Inf.")}</span><b>${inr(v, 0)}</b></div>`).join("")}
+        ${meta.budgets[name] && meta.budgets[name].cardBill ? `<div class="row between" style="font-size:12px;border-top:1px solid var(--line);padding-top:8px"><span style="color:var(--muted)">Bill</span><b>${inr(meta.budgets[name].cardBill, 0)}</b></div>` : ""}</div>
+      <div class="card col gap8 pad"><span class="label">Who paid</span><div class="bar"><div style="width:${total ? (aSp / total) * 100 : 0}%;background:var(--accent)"></div><div style="width:${total ? (mSp / total) * 100 : 0}%;background:var(--blue)"></div></div>
+        <div class="row between" style="font-size:12px"><span style="color:var(--soft)">A</span><b>${inr(aSp, 0)}</b></div><div class="row between" style="font-size:12px"><span style="color:var(--soft)">M</span><b>${inr(mSp, 0)}</b></div></div>
     </div></div>`;
-}
-function trendView(seg){
-  const months=[];for(let i=5;i>=0;i--)months.push(ymName(shiftYm(view.ym,-i)));
-  const data=months.map(n=>{const loc=monthEntries(n);const p=parseInt(n.split(' ')[1]),mi=MONTHS.indexOf(n.split(' ')[0]);const managed=p*12+mi>=2026*12+9;
-    const server=meta.monthTotals[n];const spent=managed||!server?loc.reduce((s,e)=>s+e.amount,0):server.spent;
-    const b=budgetsFor(n);const budget=server&&!managed?server.budget:CATS.reduce((s,c)=>s+b[c.key],0);
-    return {n,spent,budget,known:managed||!!server||loc.length>0}});
-  const max=Math.max(1,...data.map(d=>Math.max(d.spent,d.budget)));
-  return `<div class="col gap16">
-    <div class="row between"><div class="col"><span class="k">Charts</span><span class="h1">6 months to ${ymName(view.ym)}</span></div><div class="row gap6"><button class="iconbtn" data-act="month" data-v="-1" aria-label="Earlier">${svg('left',16)}</button><button class="iconbtn" data-act="month" data-v="1" aria-label="Later">${svg('right',16)}</button></div></div>
+      }
+      function trendView(seg) {
+        const months = [];
+        for (let i = 5; i >= 0; i--) months.push(ymName(shiftYm(view.ym, -i)));
+        const data = months.map((n) => {
+          const loc = monthEntries(n);
+          const p = parseInt(n.split(" ")[1]),
+            mi = MONTHS.indexOf(n.split(" ")[0]);
+          const managed = p * 12 + mi >= 2026 * 12 + 9;
+          const server = meta.monthTotals[n];
+          const spent =
+            managed || !server
+              ? loc.reduce((s, e) => s + e.amount, 0)
+              : server.spent;
+          const b = budgetsFor(n);
+          const budget =
+            server && !managed
+              ? server.budget
+              : CATS.reduce((s, c) => s + b[c.key], 0);
+          return {
+            n,
+            spent,
+            budget,
+            known: managed || !!server || loc.length > 0,
+          };
+        });
+        const max = Math.max(
+          1,
+          ...data.map((d) => Math.max(d.spent, d.budget)),
+        );
+        return `<div class="col gap16">
+    <div class="row between"><div class="col"><span class="k">Charts</span><span class="h1">6 months to ${ymName(view.ym)}</span></div><div class="row gap6"><button class="iconbtn" data-act="month" data-v="-1" aria-label="Earlier">${svg("left", 16)}</button><button class="iconbtn" data-act="month" data-v="1" aria-label="Later">${svg("right", 16)}</button></div></div>
     ${seg}
     <div class="card col gap12" style="padding:18px;border-radius:22px"><span class="label" style="font-size:15px">Spent vs budget</span>
       <div style="height:160px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;align-items:end">
-        ${data.map(d=>`<div class="col gap6" style="align-items:center;height:100%;justify-content:flex-end;position:relative"><div style="width:100%;height:${d.spent/max*100}%;min-height:${d.known?2:0}px;border-radius:8px;background:${d.spent>d.budget?'var(--over)':'var(--accent)'}"></div>
-          <div style="position:absolute;left:0;right:0;bottom:calc(${d.budget/max*100}% + 18px);border-top:2px dashed var(--muted)"></div><span class="hint" style="font-weight:700">${d.n.slice(0,3)}</span></div>`).join('')}
+        ${data
+          .map(
+            (
+              d,
+            ) => `<div class="col gap6" style="align-items:center;height:100%;justify-content:flex-end;position:relative"><div style="width:100%;height:${(d.spent / max) * 100}%;min-height:${d.known ? 2 : 0}px;border-radius:8px;background:${d.spent > d.budget ? "var(--over)" : "var(--accent)"}"></div>
+          <div style="position:absolute;left:0;right:0;bottom:calc(${(d.budget / max) * 100}% + 18px);border-top:2px dashed var(--muted)"></div><span class="hint" style="font-weight:700">${d.n.slice(0, 3)}</span></div>`,
+          )
+          .join("")}
       </div><span class="hint">Dashed line marks the budget. Months before October 2026 come from your sheet after the first sync.</span></div>
-    <div class="list">${data.slice().reverse().map(d=>`<div class="item"><span class="col gap4" style="flex:1"><b style="font-size:14px">${d.n}</b><span class="hint">${d.known?'budget '+inr(d.budget,0):'not loaded yet'}</span></span><b class="${d.spent>d.budget?'over-t':''}">${d.known?inr(d.spent,0):'—'}</b></div>`).join('')}</div>
+    <div class="list">${data
+      .slice()
+      .reverse()
+      .map(
+        (d) =>
+          `<div class="item"><span class="col gap4" style="flex:1"><b style="font-size:14px">${d.n}</b><span class="hint">${d.known ? "budget " + inr(d.budget, 0) : "not loaded yet"}</span></span><b class="${d.spent > d.budget ? "over-t" : ""}">${d.known ? inr(d.spent, 0) : "—"}</b></div>`,
+      )
+      .join("")}</div>
   </div>`;
-}
+      }
 
-/* ---------------- render: settings ---------------- */
-function settingsView(){
-  const pending=entries.filter(e=>e.dirty).length;
-  return `<div class="col gap16">
+      /* ---------------- render: settings ---------------- */
+      function settingsView() {
+        const pending = entries.filter((e) => e.dirty).length;
+        return `<div class="col gap16">
     <div class="col"><span class="k">Settings</span><span class="h1">App &amp; sync</span></div>
     <div class="card col gap12" style="padding:16px;border-radius:20px">
       <span class="label">This phone belongs to</span>
-      <div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr))">${['A','M'].map(w=>`<button class="${settings.who===w?'on':''}" data-act="who" data-v="${w}">${w}</button>`).join('')}</div>
+      <div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr))">${["A", "M"].map((w) => `<button class="${settings.who === w ? "on" : ""}" data-act="who" data-v="${w}">${w}</button>`).join("")}</div>
       <span class="hint">New entries default to this person. You can switch per entry.</span>
     </div>
     <div class="card col gap12" style="padding:16px;border-radius:20px">
@@ -470,215 +1470,689 @@ function settingsView(){
       <label class="col gap6"><span class="k">Script web app URL</span><input class="field" id="s-url" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(settings.url)}" autocomplete="off"></label>
       <label class="col gap6"><span class="k">App key</span><input class="field" id="s-token" placeholder="From the script log after setup()" value="${esc(settings.token)}" autocomplete="off"></label>
       <button class="primary" data-act="saveconn" style="height:48px;font-size:15px">Save and sync now</button>
-      <span class="hint">${meta.lastSync?'Last synced '+new Date(meta.lastSync).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Never synced'} · ${pending} waiting${meta.error?' · Last error: '+esc(meta.error):''}</span>
+      <span class="hint">${meta.lastSync ? "Last synced " + new Date(meta.lastSync).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "Never synced"} · ${pending} waiting${meta.error ? " · Last error: " + esc(meta.error) : ""}</span>
     </div>
     <div class="card col gap12" style="padding:16px;border-radius:20px">
       <span class="label">Look</span>
-      <div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${settings.theme==='dark'?'on':''}" data-act="settheme" data-v="dark">Dark</button><button class="${settings.theme==='light'?'on':''}" data-act="settheme" data-v="light">Light</button></div>
+      <div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${settings.theme === "dark" ? "on" : ""}" data-act="settheme" data-v="dark">Dark</button><button class="${settings.theme === "light" ? "on" : ""}" data-act="settheme" data-v="light">Light</button></div>
       <label class="col gap6"><span class="k">Chain lube reminder every (km)</span><input class="field" id="s-lube" inputmode="numeric" value="${esc(settings.lubeKm)}"></label>
     </div>
     <div class="card col gap12" style="padding:16px;border-radius:20px">
       <span class="label">Backup</span>
-      <button class="ghost row gap8" data-act="export" style="justify-content:center">${svg('download',18)}Download a backup file</button>
+      <button class="ghost row gap8" data-act="export" style="justify-content:center">${svg("download", 18)}Download a backup file</button>
       <span class="hint">Your entries live on this phone and in the Ledger tab once synced. A backup file is extra safety before changing phones.</span>
     </div>
   </div>`;
-}
+      }
 
-/* ---------------- add / edit sheet ---------------- */
-function openAdd(opts){
-  opts=opts||{};
-  const e=opts.entry;
-  draft=e?{id:e.id,step:1,amount:String(e.amount),who:e.who,cat:e.cat,sub:e.sub,km:e.km||'',activity:e.activity||'',part:e.part||'',method:e.method||'upi',source:e.source||'',date:e.date,note:e.note||'',editing:true,customCat:false,customSubOpen:false}
-    :{id:uid(),step:1,amount:'',who:settings.who,cat:opts.cat||'',sub:'',km:'',activity:'',part:'',method:'upi',source:'tataneu',date:monthOf(todayStr())===ymName(view.ym)?todayStr():ymName(view.ym).split(' ')[1]+'-'+pad(view.ym.m)+'-01',note:'',editing:false,customCat:opts.custom||false,customSubOpen:false};
-  renderSheet();
-}
-function closeSheet(){draft=null;$('#modal').innerHTML='';}
-function renderSheet(){
-  if(!draft){$('#modal').innerHTML='';return}
-  const d=draft;
-  const steps=`<div class="steps">${[1,2,3].map(i=>`<span class="${i<=d.step?'on':''}"></span>`).join('')}</div>`;
-  let body='';
-  if(d.step===1){
-    const cats=[...CATS.map(c=>c.key),...customCats()];
-    body=`<div class="row between">
-        <div class="col gap4"><span class="label" style="font-size:17px">${d.editing?'Edit expense':'Add expense'}</span>${steps}</div>
-        <div class="row" style="gap:4px;background:var(--surface2);border-radius:999px;padding:3px">${['A','M'].map(w=>`<button data-act="dwho" data-v="${w}" style="height:34px;padding:0 14px;border-radius:999px;border:none;font-weight:800;font-size:13px;${d.who===w?'background:var(--accent);color:var(--onAccent)':'background:transparent;color:var(--muted)'}" aria-pressed="${d.who===w}">${w}</button>`).join('')}</div>
-        <button class="iconbtn" data-act="close" aria-label="Close" style="background:var(--surface2);border:none">${svg('close',16,2.2)}</button></div>
-      <div class="amt" aria-live="polite"><span class="r">₹</span><span class="v">${esc(d.amount||'0')}</span><span class="caret"></span></div>
+      /* ---------------- add / edit sheet ---------------- */
+      function openAdd(opts) {
+        opts = opts || {};
+        const e = opts.entry;
+        draft = e
+          ? {
+              id: e.id,
+              step: 1,
+              amount: String(e.amount),
+              who: e.who,
+              cat: e.cat,
+              sub: e.sub,
+              km: e.km || "",
+              activity: e.activity || "",
+              part: e.part || "",
+              method: e.method || "upi",
+              source: e.source || "",
+              date: e.date,
+              note: e.note || "",
+              editing: true,
+              customCat: false,
+              customSubOpen: false,
+            }
+          : {
+              id: uid(),
+              step: 1,
+              amount: "",
+              who: settings.who,
+              cat: opts.cat || "",
+              sub: "",
+              km: "",
+              activity: "",
+              part: "",
+              method: "upi",
+              source: "tataneu",
+              date:
+                monthOf(todayStr()) === ymName(view.ym)
+                  ? todayStr()
+                  : ymName(view.ym).split(" ")[1] +
+                    "-" +
+                    pad(view.ym.m) +
+                    "-01",
+              note: "",
+              editing: false,
+              customCat: opts.custom || false,
+              customSubOpen: false,
+            };
+        renderSheet(true);
+      }
+      function updateAmount() {
+        const v = document.querySelector(".amt .v");
+        if (v) v.textContent = draft.amount || "0";
+        const n = $("#next1");
+        if (n) n.disabled = !(Number(draft.amount) > 0 && draft.cat);
+      }
+      function closeSheet() {
+        draft = null;
+        $("#modal").innerHTML = "";
+      }
+      function renderSheet(animate) {
+        if (!draft) {
+          $("#modal").innerHTML = "";
+          return;
+        }
+        const d = draft;
+        const steps = `<div class="steps">${[1, 2, 3].map((i) => `<span class="${i <= d.step ? "on" : ""}"></span>`).join("")}</div>`;
+        let body = "";
+        if (d.step === 1) {
+          const cats = [...CATS.map((c) => c.key), ...customCats()];
+          body = `<div class="row between">
+        <div class="col gap4"><span class="label" style="font-size:17px">${d.editing ? "Edit expense" : "Add expense"}</span>${steps}</div>
+        <div class="row" style="gap:4px;background:var(--surface2);border-radius:999px;padding:3px">${["A", "M"].map((w) => `<button data-act="dwho" data-v="${w}" style="height:34px;padding:0 14px;border-radius:999px;border:none;font-weight:800;font-size:13px;${d.who === w ? "background:var(--accent);color:var(--onAccent)" : "background:transparent;color:var(--muted)"}" aria-pressed="${d.who === w}">${w}</button>`).join("")}</div>
+        <button class="iconbtn" data-act="close" aria-label="Close" style="background:var(--surface2);border:none">${svg("close", 16, 2.2)}</button></div>
+      <div class="amt" aria-live="polite"><span class="r">₹</span><span class="v">${esc(d.amount || "0")}</span><span class="caret"></span></div>
       <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
-        ${cats.map(k=>{const c=catOf(k);return `<button class="ctile ${d.cat===k?'on':''}" data-act="dcat" data-v="${esc(k)}">${svg(c.icon,22,1.9)}<span>${esc(c.name)}</span></button>`}).join('')}
-        <button class="ctile ${d.customCat?'on':'dash'}" data-act="dcustomcat">${svg('plus',22,1.9)}<span>Custom</span></button>
+        ${cats
+          .map((k) => {
+            const c = catOf(k);
+            return `<button class="ctile ${d.cat === k ? "on" : ""}" data-act="dcat" data-v="${esc(k)}">${svg(c.icon, 22, 1.9)}<span>${esc(c.name)}</span></button>`;
+          })
+          .join("")}
+        <button class="ctile ${d.customCat ? "on" : "dash"}" data-act="dcustomcat">${svg("plus", 22, 1.9)}<span>Custom</span></button>
       </div>
-      ${d.customCat?`<div class="row gap8"><input class="field" id="d-newcat" placeholder="New category name" style="border-style:dashed"><button class="ghost" data-act="dnewcat">Use</button></div><span class="hint">Custom categories show as their own tile and roll into Misc in the sheet.</span>`:''}
-      <div class="keys">${['1','2','3','4','5','6','7','8','9','.','0','⌫'].map(k=>`<button data-act="key" data-v="${k}" aria-label="${k==='⌫'?'Delete digit':k}">${k}</button>`).join('')}</div>
-      <button class="primary" data-act="next1" ${Number(d.amount)>0&&d.cat?'':'disabled'}>${d.cat?'Next: type':'Pick a category'}</button>`;
-  }else if(d.step===2){
-    const c=catOf(d.cat);const subs=subsFor(d.cat);const isBike=d.cat==='petrol';
-    body=`<div class="row gap10"><button class="iconbtn" data-act="back" aria-label="Back" style="background:var(--surface2);border:none">${svg('left',16,2.2)}</button>
+      ${d.customCat ? `<div class="row gap8"><input class="field" id="d-newcat" placeholder="New category name" style="border-style:dashed"><button class="ghost" data-act="dnewcat">Use</button></div><span class="hint">Custom categories show as their own tile and roll into Misc in the sheet.</span>` : ""}
+      <div class="keys">${["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "⌫"].map((k) => `<button data-act="key" data-v="${k}" aria-label="${k === "⌫" ? "Delete digit" : k}">${k}</button>`).join("")}</div>
+      <button class="primary" id="next1" data-act="next1" ${Number(d.amount) > 0 && d.cat ? "" : "disabled"}>${d.cat ? "Next: type" : "Pick a category"}</button>`;
+        } else if (d.step === 2) {
+          const c = catOf(d.cat);
+          const subs = subsFor(d.cat);
+          const isBike = d.cat === "petrol";
+          body = `<div class="row gap10"><button class="iconbtn" data-act="back" aria-label="Back" style="background:var(--surface2);border:none">${svg("left", 16, 2.2)}</button>
         <div class="col gap4" style="flex:1"><span class="label" style="font-size:17px">${esc(c.name)}</span>${steps}</div><span class="chip ok" style="font-size:13px;color:var(--text)">${inr(d.amount)} · ${d.who}</span></div>
       <span class="k">What was it?</span>
-      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">${subs.map(s=>`<button class="ctile ${d.sub===s?'on':''}" style="min-height:88px;font-size:12px" data-act="dsub" data-v="${esc(s)}">${svg(SUB_ICON[s]||'tag',24,1.9)}<span>${esc(s)}</span></button>`).join('')}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">${subs.map((s) => `<button class="ctile ${d.sub === s ? "on" : ""}" style="min-height:88px;font-size:12px" data-act="dsub" data-v="${esc(s)}">${svg(SUB_ICON[s] || "tag", 24, 1.9)}<span>${esc(s)}</span></button>`).join("")}</div>
       <div class="col gap8"><span class="k">Not listed?</span><div class="row gap8"><input class="field" id="d-newsub" placeholder="Add a custom type" style="border-style:dashed"><button class="ghost" data-act="dnewsub">Add</button></div><span class="hint">It becomes a tile here next time.</span></div>
-      ${isBike&&d.sub?`<div class="card col gap10 pad" style="background:var(--surface2);border:none">
+      ${
+        isBike && d.sub
+          ? `<div class="card col gap10 pad" style="background:var(--surface2);border:none">
         <label class="col gap6"><span class="k">Odometer (km, optional)</span><input class="field" id="d-km" inputmode="numeric" value="${esc(d.km)}" placeholder="Current reading"></label>
-        ${d.sub==='Bike care'?`<div class="col gap6"><span class="k">What did you do?</span><div class="row gap8" style="flex-wrap:wrap">${CARE.map(a=>`<button class="pill ${d.activity===a?'on':''}" data-act="dact" data-v="${a}">${a}</button>`).join('')}</div><input class="field" id="d-act" placeholder="Or type your own" value="${CARE.includes(d.activity)?'':esc(d.activity)}" style="border-style:dashed"></div>`:''}
-        ${d.sub==='Spare parts'?`<label class="col gap6"><span class="k">Part</span><input class="field" id="d-part" value="${esc(d.part)}" placeholder="e.g. brake pads"></label>`:''}
-        ${d.sub==='Service'?`<label class="col gap6"><span class="k">What was done (optional)</span><input class="field" id="d-act" value="${esc(d.activity)}" placeholder="e.g. general service"></label>`:''}
-      </div>`:''}
-      <button class="primary" data-act="next2" ${d.sub?'':'disabled'}>Next: payment</button>`;
-  }else{
-    const c=catOf(d.cat);const srcs=METHOD_SOURCES[d.method]||[];
-    const remembered=prefs.pay[d.cat+'|'+d.sub];
-    body=`<div class="row gap10"><button class="iconbtn" data-act="back" aria-label="Back" style="background:var(--surface2);border:none">${svg('left',16,2.2)}</button>
+        ${d.sub === "Bike care" ? `<div class="col gap6"><span class="k">What did you do?</span><div class="row gap8" style="flex-wrap:wrap">${CARE.map((a) => `<button class="pill ${d.activity === a ? "on" : ""}" data-act="dact" data-v="${a}">${a}</button>`).join("")}</div><input class="field" id="d-act" placeholder="Or type your own" value="${CARE.includes(d.activity) ? "" : esc(d.activity)}" style="border-style:dashed"></div>` : ""}
+        ${d.sub === "Spare parts" ? `<label class="col gap6"><span class="k">Part</span><input class="field" id="d-part" value="${esc(d.part)}" placeholder="e.g. brake pads"></label>` : ""}
+        ${d.sub === "Service" ? `<label class="col gap6"><span class="k">What was done (optional)</span><input class="field" id="d-act" value="${esc(d.activity)}" placeholder="e.g. general service"></label>` : ""}
+      </div>`
+          : ""
+      }
+      <button class="primary" data-act="next2" ${d.sub ? "" : "disabled"}>Next: payment</button>`;
+        } else {
+          const c = catOf(d.cat);
+          const srcs = METHOD_SOURCES[d.method] || [];
+          const remembered = prefs.pay[d.cat + "|" + d.sub];
+          body = `<div class="row gap10"><button class="iconbtn" data-act="back" aria-label="Back" style="background:var(--surface2);border:none">${svg("left", 16, 2.2)}</button>
         <div class="col gap4" style="flex:1"><span class="label" style="font-size:17px">How did you pay?</span>${steps}</div></div>
       <div class="card row between" style="padding:12px 14px;border-radius:16px;background:var(--surface2);border:none"><div class="col gap4"><b style="font-size:15px">${esc(d.sub)}</b><span class="k">${esc(c.name)} · ${d.who}</span></div><span style="font-size:22px;font-weight:800">${inr(d.amount)}</span></div>
-      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px">${METHODS.map(m=>`<button class="ctile ${d.method===m.key?'on':''}" style="min-height:70px" data-act="dmethod" data-v="${m.key}">${svg(m.key,20,1.9)}<span>${m.name}</span></button>`).join('')}</div>
-      ${srcs.length?`<div class="col gap8"><div class="row between"><span class="k">${d.method==='upi'?'UPI paid from':d.method==='credit'?'Which card':'From'}</span>${remembered&&remembered.method===d.method&&remembered.source===d.source?`<span class="hint">remembered for ${esc(d.sub)}</span>`:''}</div>
-        ${srcs.map(k=>{const s=SOURCES[k];const on=d.source===k;return `<button class="opt ${on?'on':''}" data-act="dsource" data-v="${k}"><span class="swatch" style="background:${s.color}"></span><span class="col gap4" style="flex:1"><b style="font-size:14px">${s.name}</b><span class="hint" style="color:var(--muted)">${d.method==='credit'&&k==='tataneu'?'Credit card':s.hint}</span></span>${on?`<span style="color:var(--accentText)">${svg('check',20,2.4)}</span>`:''}</button>`}).join('')}</div>`:''}
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px">${METHODS.map((m) => `<button class="ctile ${d.method === m.key ? "on" : ""}" style="min-height:70px" data-act="dmethod" data-v="${m.key}">${svg(m.key, 20, 1.9)}<span>${m.name}</span></button>`).join("")}</div>
+      ${
+        srcs.length
+          ? `<div class="col gap8"><div class="row between"><span class="k">${d.method === "upi" ? "UPI paid from" : d.method === "credit" ? "Which card" : "From"}</span>${remembered && remembered.method === d.method && remembered.source === d.source ? `<span class="hint">remembered for ${esc(d.sub)}</span>` : ""}</div>
+        ${srcs
+          .map((k) => {
+            const s = SOURCES[k];
+            const on = d.source === k;
+            return `<button class="opt ${on ? "on" : ""}" data-act="dsource" data-v="${k}"><span class="swatch" style="background:${s.color}"></span><span class="col gap4" style="flex:1"><b style="font-size:14px">${s.name}</b><span class="hint" style="color:var(--muted)">${d.method === "credit" && k === "tataneu" ? "Credit card" : s.hint}</span></span>${on ? `<span style="color:var(--accentText)">${svg("check", 20, 2.4)}</span>` : ""}</button>`;
+          })
+          .join("")}</div>`
+          : ""
+      }
       <div class="grid2"><label class="col gap6"><span class="k">Date</span><input type="date" class="field" id="d-date" value="${esc(d.date)}" max="${todayStr()}"></label>
         <label class="col gap6"><span class="k">Note (optional)</span><input class="field" id="d-note" value="${esc(d.note)}" placeholder="What was it for?" maxlength="200"></label></div>
-      <div class="col gap8" style="margin-top:4px"><button class="primary" data-act="dsave">${d.editing?'Save changes':'Save '+inr(d.amount)}</button>
-        ${d.editing?`<button class="ghost danger row gap8" style="justify-content:center" data-act="ddelete">${svg('trash',16)}Delete expense</button>`:''}
+      <div class="col gap8" style="margin-top:4px"><button class="primary" data-act="dsave">${d.editing ? "Save changes" : "Save " + inr(d.amount)}</button>
+        ${d.editing ? `<button class="ghost danger row gap8" style="justify-content:center" data-act="ddelete">${svg("trash", 16)}Delete expense</button>` : ""}
         <span class="hint" style="text-align:center">Saved on this phone instantly · syncs when online</span></div>`;
-  }
-  $('#modal').innerHTML=`<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-label="Expense">${'<div class="grab"></div>'+body}</div></div>`;
-}
-function captureDraftInputs(){
-  if(!draft)return;
-  const v=id=>{const el=$('#'+id);return el?el.value:null};
-  if(v('d-km')!==null)draft.km=v('d-km').replace(/[^\d]/g,'');
-  if(v('d-part')!==null)draft.part=v('d-part').trim();
-  if(v('d-act')!==null){const a=v('d-act').trim();if(a||!CARE.includes(draft.activity))draft.activity=a||draft.activity}
-  if(v('d-date')!==null&&v('d-date'))draft.date=v('d-date');
-  if(v('d-note')!==null)draft.note=v('d-note').trim();
-}
-function applyRemembered(){const r=prefs.pay[draft.cat+'|'+draft.sub];if(r&&!draft.editing){draft.method=r.method;draft.source=r.source}else if(!draft.editing){const s=METHOD_SOURCES[draft.method]||[];if(!s.includes(draft.source))draft.source=s[0]||''}}
+        }
+        $("#modal").innerHTML =
+          `<div class="scrim" data-act="scrim"><div class="sheet${animate ? " anim" : ""}" role="dialog" aria-modal="true" aria-label="Expense">${'<div class="grab"></div>' + body}</div></div>`;
+      }
+      function captureDraftInputs() {
+        if (!draft) return;
+        const v = (id) => {
+          const el = $("#" + id);
+          return el ? el.value : null;
+        };
+        if (v("d-km") !== null) draft.km = v("d-km").replace(/[^\d]/g, "");
+        if (v("d-part") !== null) draft.part = v("d-part").trim();
+        if (v("d-act") !== null) {
+          const a = v("d-act").trim();
+          if (a || !CARE.includes(draft.activity))
+            draft.activity = a || draft.activity;
+        }
+        if (v("d-date") !== null && v("d-date")) draft.date = v("d-date");
+        if (v("d-note") !== null) draft.note = v("d-note").trim();
+      }
+      function applyRemembered() {
+        const r = prefs.pay[draft.cat + "|" + draft.sub];
+        if (r && !draft.editing) {
+          draft.method = r.method;
+          draft.source = r.source;
+        } else if (!draft.editing) {
+          const s = METHOD_SOURCES[draft.method] || [];
+          if (!s.includes(draft.source)) draft.source = s[0] || "";
+        }
+      }
 
-function saveEntry(e){
-  e.updatedAt=Date.now();e.dirty=true;
-  const i=entries.findIndex(x=>x.id===e.id);
-  if(i>=0)entries[i]=Object.assign({},entries[i],e);else entries.push(e);
-  persist();scheduleSync();
-}
+      function saveEntry(e) {
+        e.updatedAt = Date.now();
+        e.dirty = true;
+        const i = entries.findIndex((x) => x.id === e.id);
+        if (i >= 0) entries[i] = Object.assign({}, entries[i], e);
+        else entries.push(e);
+        persist();
+        scheduleSync();
+      }
 
-/* ---------------- sync ---------------- */
-let syncTimer;
-function scheduleSync(){clearTimeout(syncTimer);syncTimer=setTimeout(doSync,1200)}
-async function doSync(manual){
-  if(syncing)return;
-  if(!settings.url||!settings.token){if(manual)toast('Add the script URL and key in Settings first');return}
-  if(!navigator.onLine){if(manual)toast('Offline. Entries will sync when you are back online.');return}
-  syncing=true;updateSyncBtn();
-  const dirty=entries.filter(e=>e.dirty);
-  const sent={};dirty.forEach(e=>sent[e.id]=e.updatedAt);
-  const months=[...new Set([ymName(view.ym),monthOf(todayStr()),...dirty.map(e=>monthOf(e.date))])];
-  const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),45000);
-  try{
-    const res=await fetch(settings.url,{method:'POST',body:JSON.stringify({action:'sync',token:settings.token,since:meta.lastServerTs||0,months,entries:dirty.map(({dirty,...x})=>x)}),signal:ctrl.signal,redirect:'follow'});
-    const data=await res.json();
-    if(!data.ok)throw new Error(data.error||'Sync failed');
-    const map={};entries.forEach((e,i)=>map[e.id]=i);
-    entries.forEach(e=>{if(e.dirty&&sent[e.id]===e.updatedAt)e.dirty=false});
-    (data.entries||[]).forEach(s=>{
-      const x={id:s.id,date:s.date,who:s.who,cat:s.cat,sub:s.sub,amount:Number(s.amount)||0,method:s.method,source:s.source,note:s.note,km:s.km===''?'':Number(s.km)||'',activity:s.activity,part:s.part,deleted:!!Number(s.deleted),updatedAt:Number(s.updatedAt)||0};
-      const i=map[x.id];
-      if(i===undefined){entries.push(x);map[x.id]=entries.length-1}
-      else{const l=entries[i];if(!l.dirty||x.updatedAt>l.updatedAt)entries[i]=x}
-    });
-    meta.lastServerTs=data.serverTime||meta.lastServerTs;
-    Object.assign(meta.budgets,data.budgets||{});
-    meta.monthTotals=data.monthTotals||meta.monthTotals;
-    if(data.rates)meta.rates=data.rates;
-    meta.lastSync=Date.now();meta.error='';
-    persist();
-    if(manual)toast('Synced with the House sheet');
-  }catch(err){
-    meta.error=err.name==='AbortError'?'Timed out':String(err.message||err);persist();
-    if(manual)toast('Sync failed: '+meta.error);
-  }finally{
-    clearTimeout(t);syncing=false;
-    const a=document.activeElement;const busy=a&&/^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName);
-    if(!draft&&!busy){if(view.screen==='bike')captureBike();render()}else updateSyncBtn();
-  }
-}
-function updateSyncBtn(){const b=$('#syncbtn');if(b)b.innerHTML=syncing?'<span class="k">…</span>':svg('cloud',18)}
+      /* ---------------- sync ---------------- */
+      let syncTimer;
+      function scheduleSync() {
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(doSync, 1200);
+      }
+      async function doSync(manual) {
+        if (syncing) return;
+        if (!settings.url || !settings.token) {
+          if (manual) toast("Add the script URL and key in Settings first");
+          return;
+        }
+        if (!navigator.onLine) {
+          if (manual)
+            toast("Offline. Entries will sync when you are back online.");
+          return;
+        }
+        syncing = true;
+        updateSyncBtn();
+        const dirty = entries.filter((e) => e.dirty);
+        const sent = {};
+        dirty.forEach((e) => (sent[e.id] = e.updatedAt));
+        const months = [
+          ...new Set([
+            ymName(view.ym),
+            monthOf(todayStr()),
+            ...dirty.map((e) => monthOf(e.date)),
+          ]),
+        ];
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 45000);
+        try {
+          const res = await fetch(settings.url, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "sync",
+              token: settings.token,
+              since: meta.lastServerTs || 0,
+              months,
+              entries: dirty.map(({ dirty, ...x }) => x),
+            }),
+            signal: ctrl.signal,
+            redirect: "follow",
+          });
+          const data = await res.json();
+          if (!data.ok) throw new Error(data.error || "Sync failed");
+          const map = {};
+          entries.forEach((e, i) => (map[e.id] = i));
+          entries.forEach((e) => {
+            if (e.dirty && sent[e.id] === e.updatedAt) e.dirty = false;
+          });
+          (data.entries || []).forEach((s) => {
+            const x = {
+              id: s.id,
+              date: s.date,
+              who: s.who,
+              cat: s.cat,
+              sub: s.sub,
+              amount: Number(s.amount) || 0,
+              method: s.method,
+              source: s.source,
+              note: s.note,
+              km: s.km === "" ? "" : Number(s.km) || "",
+              activity: s.activity,
+              part: s.part,
+              deleted: !!Number(s.deleted),
+              updatedAt: Number(s.updatedAt) || 0,
+            };
+            const i = map[x.id];
+            if (i === undefined) {
+              entries.push(x);
+              map[x.id] = entries.length - 1;
+            } else {
+              const l = entries[i];
+              if (!l.dirty || x.updatedAt > l.updatedAt) entries[i] = x;
+            }
+          });
+          meta.lastServerTs = data.serverTime || meta.lastServerTs;
+          Object.assign(meta.budgets, data.budgets || {});
+          meta.monthTotals = data.monthTotals || meta.monthTotals;
+          if (data.rates) meta.rates = data.rates;
+          meta.lastSync = Date.now();
+          meta.error = "";
+          persist();
+          if (manual) toast("Synced with the House sheet");
+        } catch (err) {
+          meta.error =
+            err.name === "AbortError"
+              ? "Timed out"
+              : String(err.message || err);
+          persist();
+          if (manual) toast("Sync failed: " + meta.error);
+        } finally {
+          clearTimeout(t);
+          syncing = false;
+          const a = document.activeElement;
+          const busy = a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName);
+          if (!draft && !busy) {
+            if (view.screen === "bike") captureBike();
+            render();
+          } else updateSyncBtn();
+        }
+      }
+      function updateSyncBtn() {
+        const b = $("#syncbtn");
+        if (b)
+          b.innerHTML = syncing ? '<span class="k">…</span>' : svg("cloud", 18);
+      }
 
-/* ---------------- events ---------------- */
-document.addEventListener('click',ev=>{
-  const el=ev.target.closest('[data-act]');if(!el)return;
-  const act=el.dataset.act,v=el.dataset.v;
-  if(act==='scrim'){if(ev.target===el)closeSheet();return}
-  switch(act){
-    case 'go':view.screen=v;window.scrollTo(0,0);render();break;
-    case 'month':view.ym=shiftYm(view.ym,Number(v));render();if(!meta.budgets[ymName(view.ym)])scheduleSync();break;
-    case 'sync':doSync(true);break;
-    case 'theme':settings.theme=settings.theme==='dark'?'light':'dark';persist();render();break;
-    case 'settheme':settings.theme=v;persist();render();break;
-    case 'who':settings.who=v;persist();render();break;
-    case 'entries':view.filter={who:'all',cat:v==='all'?'all':v,card:false,q:''};view.screen='entries';window.scrollTo(0,0);render();break;
-    case 'fwho':view.filter.who=v;render();break;
-    case 'fcard':view.filter.card=!view.filter.card;render();break;
-    case 'cmode':view.chartMode=v;render();break;
-    case 'add':openAdd({custom:v==='custom'});break;
-    case 'edit':{const e=entries.find(x=>x.id===v);if(e)openAdd({entry:e});break}
-    case 'close':closeSheet();break;
-    case 'dwho':draft.who=v;renderSheet();break;
-    case 'key':{let a=draft.amount;if(v==='⌫')a=a.slice(0,-1);else if(v==='.'){if(!a.includes('.'))a=(a||'0')+'.'}else{const [i,dec]=a.split('.');if(dec!==undefined&&dec.length>=2)break;if((i||'').replace(/^0+/,'').length>=8&&dec===undefined)break;a=(a==='0'?'':a)+v}draft.amount=a;renderSheet();break}
-    case 'dcat':draft.cat=v;draft.customCat=false;if(draft.sub&&!subsFor(v).includes(draft.sub))draft.sub='';if(Number(draft.amount)>0)goStep2();else renderSheet();break;
-    case 'dcustomcat':draft.customCat=!draft.customCat;renderSheet();if(draft.customCat){const i=$('#d-newcat');i&&i.focus()}break;
-    case 'dnewcat':{const n=($('#d-newcat').value||'').trim().slice(0,30);if(!n){toast('Type a category name');break}draft.cat='x:'+n;draft.customCat=false;draft.sub='';if(Number(draft.amount)>0)goStep2();else renderSheet();break}
-    case 'next1':goStep2();break;
-    case 'back':captureDraftInputs();draft.step--;renderSheet();break;
-    case 'dsub':captureDraftInputs();draft.sub=v;if(draft.cat==='petrol'){renderSheet()}else{applyRemembered();draft.step=3;renderSheet()}break;
-    case 'dnewsub':{const n=($('#d-newsub').value||'').trim().slice(0,30);if(!n){toast('Type a name for the new type');break}draft.sub=n;if(draft.cat==='petrol')renderSheet();else{applyRemembered();draft.step=3;renderSheet()}break}
-    case 'dact':captureDraftInputs();draft.activity=v;renderSheet();break;
-    case 'next2':captureDraftInputs();applyRemembered();draft.step=3;renderSheet();break;
-    case 'dmethod':captureDraftInputs();draft.method=v;{const s=METHOD_SOURCES[v]||[];if(!s.includes(draft.source))draft.source=s[0]||''}renderSheet();break;
-    case 'dsource':captureDraftInputs();draft.source=v;renderSheet();break;
-    case 'dsave':{captureDraftInputs();const d=draft;const amt=Math.round(Number(d.amount)*100)/100;
-      if(!(amt>=0)||!d.cat||!d.sub){toast('Amount, category and type are needed');break}
-      prefs.pay[d.cat+'|'+d.sub]={method:d.method,source:d.source};
-      saveEntry({id:d.id,date:d.date,who:d.who,cat:d.cat,sub:d.sub,amount:amt,method:d.method,source:d.source,note:d.note,km:d.km?Number(d.km):'',activity:d.cat==='petrol'?d.activity:'',part:d.cat==='petrol'?d.part:'',deleted:false});
-      const m=monthOf(d.date);const [mn,y]=m.split(' ');view.ym={y:Number(y),m:MONTHS.indexOf(mn)+1};
-      toast(d.editing?'Changes saved':'Saved '+inr(amt));closeSheet();render();break}
-    case 'ddelete':{const e=entries.find(x=>x.id===draft.id);if(e&&confirm('Delete this expense? It will be removed from the sheet on the next sync.')){saveEntry(Object.assign({},e,{deleted:true}));toast('Expense deleted');closeSheet();render()}break}
-    case 'btype':captureBike();view.bike.type=v;view.bike.activity=v==='Bike care'?'Both':'';render();break;
-    case 'bact':captureBike();view.bike.activity=v;render();if(!v){const i=$('#b-act');i&&i.focus()}break;
-    case 'bsave':{captureBike();const b=view.bike;const cost=Math.round((Number(b.cost)||0)*100)/100;
-      if(b.type==='Spare parts'&&!b.part){toast('Add the part name');break}
-      if(b.type==='Petrol'&&!(cost>0)){toast('Add the petrol amount');break}
-      const [method,source]=b.pay.split('|');
-      saveEntry({id:uid(),date:b.date||todayStr(),who:settings.who,cat:'petrol',sub:b.type,amount:cost,method,source:source||'',note:'',km:b.km?Number(b.km):'',activity:b.type==='Bike care'||b.type==='Service'?b.activity:'',part:b.type==='Spare parts'?b.part:'',deleted:false});
-      view.bike=Object.assign({},view.bike,{km:'',part:'',cost:'',date:todayStr()});toast('Saved to bike log');render();break}
-    case 'saveconn':{settings.url=($('#s-url').value||'').trim();settings.token=($('#s-token').value||'').trim();const lk=Number($('#s-lube').value);if(lk>0)settings.lubeKm=lk;persist();doSync(true);break}
-    case 'export':{const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),entries},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='house-expenses-backup-'+todayStr()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);break}
-  }
-});
-function goStep2(){const subs=subsFor(draft.cat);if(subs.length===1&&draft.cat!=='petrol'){draft.sub=subs[0];applyRemembered();draft.step=3}else draft.step=2;renderSheet()}
-function captureBike(){const b=view.bike;const g=id=>{const el=$('#'+id);return el?el.value:null};
-  if(g('b-date')!==null&&g('b-date'))b.date=g('b-date');if(g('b-km')!==null)b.km=g('b-km').replace(/[^\d]/g,'');
-  if(g('b-part')!==null)b.part=g('b-part').trim();if(g('b-cost')!==null)b.cost=g('b-cost').replace(/[^\d.]/g,'');
-  if(g('b-pay')!==null)b.pay=g('b-pay');if(g('b-act')!==null)b.activity=g('b-act').trim()}
-document.addEventListener('input',ev=>{
-  if(ev.target.id==='q'){view.filter.q=ev.target.value;const pos=ev.target.selectionStart;render();const q=$('#q');q.focus();q.setSelectionRange(pos,pos)}
-});
-document.addEventListener('change',ev=>{
-  if(ev.target.id==='fcat'){view.filter.cat=ev.target.value;render()}
-  if(ev.target.id==='s-lube'){const n=Number(ev.target.value);if(n>0){settings.lubeKm=n;persist()}}
-});
-document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&draft)closeSheet()});
-function softRender(){if(draft)return;if(view.screen==='bike')captureBike();render()}
-window.addEventListener('online',()=>{softRender();doSync()});
-window.addEventListener('offline',softRender);
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')doSync()});
+      /* ---------------- events ---------------- */
+      document.addEventListener("click", (ev) => {
+        const el = ev.target.closest("[data-act]");
+        if (!el) return;
+        const act = el.dataset.act,
+          v = el.dataset.v;
+        if (act === "scrim") {
+          if (ev.target === el) closeSheet();
+          return;
+        }
+        switch (act) {
+          case "go":
+            view.screen = v;
+            window.scrollTo(0, 0);
+            render();
+            break;
+          case "month":
+            view.ym = shiftYm(view.ym, Number(v));
+            render();
+            if (!meta.budgets[ymName(view.ym)]) scheduleSync();
+            break;
+          case "sync":
+            doSync(true);
+            break;
+          case "theme":
+            settings.theme = settings.theme === "dark" ? "light" : "dark";
+            persist();
+            render();
+            break;
+          case "settheme":
+            settings.theme = v;
+            persist();
+            render();
+            break;
+          case "who":
+            settings.who = v;
+            persist();
+            render();
+            break;
+          case "entries":
+            view.filter = {
+              who: "all",
+              cat: v === "all" ? "all" : v,
+              card: false,
+              q: "",
+            };
+            view.screen = "entries";
+            window.scrollTo(0, 0);
+            render();
+            break;
+          case "fwho":
+            view.filter.who = v;
+            render();
+            break;
+          case "fcard":
+            view.filter.card = !view.filter.card;
+            render();
+            break;
+          case "cmode":
+            view.chartMode = v;
+            render();
+            break;
+          case "add":
+            openAdd({ custom: v === "custom" });
+            break;
+          case "edit": {
+            const e = entries.find((x) => x.id === v);
+            if (e) openAdd({ entry: e });
+            break;
+          }
+          case "close":
+            closeSheet();
+            break;
+          case "dwho":
+            draft.who = v;
+            renderSheet();
+            break;
+          case "key": {
+            let a = draft.amount;
+            if (v === "⌫") a = a.slice(0, -1);
+            else if (v === ".") {
+              if (!a.includes(".")) a = (a || "0") + ".";
+            } else {
+              const [i, dec] = a.split(".");
+              if (dec !== undefined && dec.length >= 2) break;
+              if ((i || "").replace(/^0+/, "").length >= 8 && dec === undefined)
+                break;
+              a = (a === "0" ? "" : a) + v;
+            }
+            draft.amount = a;
+            updateAmount();
+            break;
+          }
+          case "dcat":
+            draft.cat = v;
+            draft.customCat = false;
+            if (draft.sub && !subsFor(v).includes(draft.sub)) draft.sub = "";
+            if (Number(draft.amount) > 0) goStep2();
+            else renderSheet();
+            break;
+          case "dcustomcat":
+            draft.customCat = !draft.customCat;
+            renderSheet();
+            if (draft.customCat) {
+              const i = $("#d-newcat");
+              i && i.focus();
+            }
+            break;
+          case "dnewcat": {
+            const n = ($("#d-newcat").value || "").trim().slice(0, 30);
+            if (!n) {
+              toast("Type a category name");
+              break;
+            }
+            draft.cat = "x:" + n;
+            draft.customCat = false;
+            draft.sub = "";
+            if (Number(draft.amount) > 0) goStep2();
+            else renderSheet();
+            break;
+          }
+          case "next1":
+            goStep2();
+            break;
+          case "back":
+            captureDraftInputs();
+            draft.step--;
+            renderSheet();
+            break;
+          case "dsub":
+            captureDraftInputs();
+            draft.sub = v;
+            if (draft.cat === "petrol") {
+              renderSheet();
+            } else {
+              applyRemembered();
+              draft.step = 3;
+              renderSheet();
+            }
+            break;
+          case "dnewsub": {
+            const n = ($("#d-newsub").value || "").trim().slice(0, 30);
+            if (!n) {
+              toast("Type a name for the new type");
+              break;
+            }
+            draft.sub = n;
+            if (draft.cat === "petrol") renderSheet();
+            else {
+              applyRemembered();
+              draft.step = 3;
+              renderSheet();
+            }
+            break;
+          }
+          case "dact":
+            captureDraftInputs();
+            draft.activity = v;
+            renderSheet();
+            break;
+          case "next2":
+            captureDraftInputs();
+            applyRemembered();
+            draft.step = 3;
+            renderSheet();
+            break;
+          case "dmethod":
+            captureDraftInputs();
+            draft.method = v;
+            {
+              const s = METHOD_SOURCES[v] || [];
+              if (!s.includes(draft.source)) draft.source = s[0] || "";
+            }
+            renderSheet();
+            break;
+          case "dsource":
+            captureDraftInputs();
+            draft.source = v;
+            renderSheet();
+            break;
+          case "dsave": {
+            captureDraftInputs();
+            const d = draft;
+            const amt = Math.round(Number(d.amount) * 100) / 100;
+            if (!(amt >= 0) || !d.cat || !d.sub) {
+              toast("Amount, category and type are needed");
+              break;
+            }
+            prefs.pay[d.cat + "|" + d.sub] = {
+              method: d.method,
+              source: d.source,
+            };
+            saveEntry({
+              id: d.id,
+              date: d.date,
+              who: d.who,
+              cat: d.cat,
+              sub: d.sub,
+              amount: amt,
+              method: d.method,
+              source: d.source,
+              note: d.note,
+              km: d.km ? Number(d.km) : "",
+              activity: d.cat === "petrol" ? d.activity : "",
+              part: d.cat === "petrol" ? d.part : "",
+              deleted: false,
+            });
+            const m = monthOf(d.date);
+            const [mn, y] = m.split(" ");
+            view.ym = { y: Number(y), m: MONTHS.indexOf(mn) + 1 };
+            toast(d.editing ? "Changes saved" : "Saved " + inr(amt));
+            closeSheet();
+            render();
+            break;
+          }
+          case "ddelete": {
+            const e = entries.find((x) => x.id === draft.id);
+            if (
+              e &&
+              confirm(
+                "Delete this expense? It will be removed from the sheet on the next sync.",
+              )
+            ) {
+              saveEntry(Object.assign({}, e, { deleted: true }));
+              toast("Expense deleted");
+              closeSheet();
+              render();
+            }
+            break;
+          }
+          case "btype":
+            captureBike();
+            view.bike.type = v;
+            view.bike.activity = v === "Bike care" ? "Both" : "";
+            render();
+            break;
+          case "bact":
+            captureBike();
+            view.bike.activity = v;
+            render();
+            if (!v) {
+              const i = $("#b-act");
+              i && i.focus();
+            }
+            break;
+          case "bsave": {
+            captureBike();
+            const b = view.bike;
+            const cost = Math.round((Number(b.cost) || 0) * 100) / 100;
+            if (b.type === "Spare parts" && !b.part) {
+              toast("Add the part name");
+              break;
+            }
+            if (b.type === "Petrol" && !(cost > 0)) {
+              toast("Add the petrol amount");
+              break;
+            }
+            const [method, source] = b.pay.split("|");
+            saveEntry({
+              id: uid(),
+              date: b.date || todayStr(),
+              who: settings.who,
+              cat: "petrol",
+              sub: b.type,
+              amount: cost,
+              method,
+              source: source || "",
+              note: "",
+              km: b.km ? Number(b.km) : "",
+              activity:
+                b.type === "Bike care" || b.type === "Service"
+                  ? b.activity
+                  : "",
+              part: b.type === "Spare parts" ? b.part : "",
+              deleted: false,
+            });
+            view.bike = Object.assign({}, view.bike, {
+              km: "",
+              part: "",
+              cost: "",
+              date: todayStr(),
+            });
+            toast("Saved to bike log");
+            render();
+            break;
+          }
+          case "saveconn": {
+            settings.url = ($("#s-url").value || "").trim();
+            settings.token = ($("#s-token").value || "").trim();
+            const lk = Number($("#s-lube").value);
+            if (lk > 0) settings.lubeKm = lk;
+            persist();
+            doSync(true);
+            break;
+          }
+          case "export": {
+            const blob = new Blob(
+              [
+                JSON.stringify(
+                  { exportedAt: new Date().toISOString(), entries },
+                  null,
+                  1,
+                ),
+              ],
+              { type: "application/json" },
+            );
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "house-expenses-backup-" + todayStr() + ".json";
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+            break;
+          }
+        }
+      });
+      function goStep2() {
+        const subs = subsFor(draft.cat);
+        if (subs.length === 1 && draft.cat !== "petrol") {
+          draft.sub = subs[0];
+          applyRemembered();
+          draft.step = 3;
+        } else draft.step = 2;
+        renderSheet();
+      }
+      function captureBike() {
+        const b = view.bike;
+        const g = (id) => {
+          const el = $("#" + id);
+          return el ? el.value : null;
+        };
+        if (g("b-date") !== null && g("b-date")) b.date = g("b-date");
+        if (g("b-km") !== null) b.km = g("b-km").replace(/[^\d]/g, "");
+        if (g("b-part") !== null) b.part = g("b-part").trim();
+        if (g("b-cost") !== null) b.cost = g("b-cost").replace(/[^\d.]/g, "");
+        if (g("b-pay") !== null) b.pay = g("b-pay");
+        if (g("b-act") !== null) b.activity = g("b-act").trim();
+      }
+      document.addEventListener("input", (ev) => {
+        if (ev.target.id === "q") {
+          view.filter.q = ev.target.value;
+          const pos = ev.target.selectionStart;
+          render();
+          const q = $("#q");
+          q.focus();
+          q.setSelectionRange(pos, pos);
+        }
+      });
+      document.addEventListener("change", (ev) => {
+        if (ev.target.id === "fcat") {
+          view.filter.cat = ev.target.value;
+          render();
+        }
+        if (ev.target.id === "s-lube") {
+          const n = Number(ev.target.value);
+          if (n > 0) {
+            settings.lubeKm = n;
+            persist();
+          }
+        }
+      });
+      document.addEventListener("keydown", (ev) => {
+        if (ev.key === "Escape" && draft) closeSheet();
+      });
+      function softRender() {
+        if (draft) return;
+        if (view.screen === "bike") captureBike();
+        render();
+      }
+      window.addEventListener("online", () => {
+        softRender();
+        doSync();
+      });
+      window.addEventListener("offline", softRender);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") doSync();
+      });
 
-/* ---------------- boot ---------------- */
-if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
-if(!settings.url)view.screen='settings';
-render();
-doSync();
-</script>
-</body>
+      /* ---------------- boot ---------------- */
+      if (navigator.storage && navigator.storage.persist)
+        navigator.storage.persist().catch(() => {});
+      if ("serviceWorker" in navigator)
+        window.addEventListener("load", () =>
+          navigator.serviceWorker.register("sw.js").catch(() => {}),
+        );
+      if (!settings.url) view.screen = "settings";
+      render();
+      doSync();
+    </script>
+  </body>
 </html>
